@@ -4,16 +4,16 @@ data:
     # Data Index configuration
     mp.messaging.outgoing.kogito-processinstances-events.connector=quarkus-http
     mp.messaging.outgoing.kogito-processinstances-events.topic=kogito-processinstances-events
-    mp.messaging.outgoing.kogito-processinstances-events.url=http://data-index-service-postgresql.svc.cluster.local/processes
+    mp.messaging.outgoing.kogito-processinstances-events.url=http://data-index-service-postgresql/processes
 
     mp.messaging.outgoing.kogito-usertaskinstances-events.connector=quarkus-http
     mp.messaging.outgoing.kogito-usertaskinstances-events.topic=kogito-usertaskinstances-events
-    mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql.svc.cluster.local/tasks
+    mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql/tasks
     mp.messaging.outgoing.kogito-usertaskinstances-events.method=POST
 
     mp.messaging.outgoing.kogito-variables-events.connector=quarkus-http
     mp.messaging.outgoing.kogito-variables-events.topic=kogito-variables-events
-    mp.messaging.outgoing.kogito-variables-events.url=http://data-index-service-postgresql.svc.cluster.local/variables
+    mp.messaging.outgoing.kogito-variables-events.url=http://data-index-service-postgresql/variables
     mp.messaging.outgoing.kogito-variables-events.method=POST
 
     quarkus.log.category."io.smallrye.reactive.messaging".level = DEBUG
