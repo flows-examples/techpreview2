@@ -1,6 +1,6 @@
 resources:
-- 01_postgres.yaml
-- 02_dataindex.yaml
+- 01-postgres.yaml
+- 02-dataindex.yaml
 
 secretGenerator:
 - name: postgres-secrets

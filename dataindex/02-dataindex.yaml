@@ -58,4 +58,4 @@ spec:
       targetPort: 8080
   selector:
     app.kubernetes.io/name: data-index-service-postgresql
-  type: ClusterIP
+  type: NodePort
