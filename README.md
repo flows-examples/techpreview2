@@ -61,7 +61,7 @@ To access the application, run:
 
 ```shell
 kubectl patch svc greeting  -p '{"spec": {"type": "NodePort"}}'
-minikube service order --url
+minikube service greeting --url
 ```
 
 This should expose the workflow and return the public endpoint.
@@ -69,7 +69,7 @@ This should expose the workflow and return the public endpoint.
 You can then use it to `curl` the REST endpoint and start a new workflow instance which will return immediately:
 
 ```shell
- curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{"name": "John", "language": "English"}' http://${ENDPOINT}/greeting
+curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{"name": "John", "language": "English"}' http://${ENDPOINT}/greeting
 ```
 
 Replace `${ENDPOINT}` with the output from the previous command.
