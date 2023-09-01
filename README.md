@@ -1,8 +1,10 @@
-# SonataFlow Data Index On Kubernetes
+# SonataFlow Use Cases TP2
 
-Example of how to deploy Data Index on Kubernetes.
+Collection of artifacts to test SonataFlow Use Cases TP2.
 
 ## Deploy Data Index locally
+
+Example of how to deploy Data Index on Kubernetes.
 
 ### Prereqs
 
@@ -38,7 +40,7 @@ The output is the Data Index URL, so you can access the GraphiQL UI.
 
 For more information about Data Index and this deployment see [Data Index standalone service](https://sonataflow.org/serverlessworkflow/latest/data-index/data-index-service.html) in SonataFlow guides.
 
-## Deploy a SonataFlow example
+## Deploy the SonataFlow Greeting example
 
 To feed Data Index with workflow execution data, you must deploy a SonataFlow instance and configure it to send events to Data Index.
 
@@ -52,7 +54,7 @@ To feed Data Index with workflow execution data, you must deploy a SonataFlow in
 Open a new terminal and run:
 
 ```shell
-kubectl apply -f sonataflow/
+kubectl apply -f sonataflow-greeting/
 ```
 
 It should build and deploy a new instance of the Greetings workflow in the same namespace where Data Index is deployed.
