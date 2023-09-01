@@ -1,0 +1,24 @@
+resources:
+- 01-postgres.yaml
+- 02-dataindex.yaml
+
+secretGenerator:
+- name: postgres-secrets
+  literals:
+  - POSTGRES_USER=sonataflow
+  - POSTGRES_PASSWORD=sonataflow
+  - POSTGRES_DB=sonataflow
+  - PGDATA=/var/lib/postgresql/data/mydata
+
+configMapGenerator:
+  - name: dataindex-properties
+    literals:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/sonataflow?currentSchema=data-index-service
+      - QUARKUS_DATASOURCE_DB_KIND=postgres
+      - QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION=update
+      - QUARKUS_KAFKA_HEALTH_ENABLE=false
+      - QUARKUS_HTTP_CORS=true
+      - QUARKUS_HTTP_CORS_ORIGINS=/.*/
+      - QUARKUS_FLYWAY_MIGRATE_AT_START=true
+      - KOGITO_DATA_INDEX_QUARKUS_PROFILE=http-events-support
+      - QUARKUS_HTTP_PORT=8080
