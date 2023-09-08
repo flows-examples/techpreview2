@@ -1,0 +1,4 @@
+resources:
+- 02-configmap_workflowtimeouts-props.yaml
+- 03-sonataflow_workflowtimeouts.yaml
+

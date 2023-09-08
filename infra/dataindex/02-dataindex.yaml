@@ -44,6 +44,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: dataindex-properties
+      initContainers:
+        - name: init-postgres
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c', 'until nc -vz postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local 5432; do echo "Waiting for postgres server"; sleep 3; done;']
 ---
 apiVersion: v1
 kind: Service

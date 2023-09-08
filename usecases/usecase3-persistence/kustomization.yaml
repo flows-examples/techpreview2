@@ -1,0 +1,3 @@
+resources:
+- ../../platforms/dataindex_and_jobservice_platform_persistence
+- ../../workflows/sonataflow-callbackstatetimeouts-persistence

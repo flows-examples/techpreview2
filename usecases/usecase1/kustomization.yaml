@@ -1,0 +1,3 @@
+resources:
+- ../../platforms/dataindex_platform
+- ../../workflows/sonataflow-greeting
