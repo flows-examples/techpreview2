@@ -26,6 +26,8 @@ spec:
               name: http
               protocol: TCP
           env:
+            - name: JOBS_SERVICE_PERSISTENCE
+              value: postgresql
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -40,9 +42,9 @@ spec:
                 secretKeyRef:
                   key: POSTGRES_PASSWORD
                   name: postgres-secrets
-          envFrom:
-            - configMapRef:
-                name: jobs-service-properties
+          volumeMounts:
+            - name: application-config
+              mountPath: "/home/kogito/config"
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -63,6 +65,10 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 10
+      volumes:
+        - name: application-config
+          configMap:
+            name: jobs-service-properties
       initContainers:
         - name: init-postgres
           image: busybox:1.36

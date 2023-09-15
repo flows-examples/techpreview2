@@ -5,8 +5,31 @@ Collection of artifacts to test SonataFlow Use Cases TP2.
 ## Prereqs for all the use cases
 
 1. Minikube installed
+
+We recommend that you start Minikube with the following parameters, note that the `registry` addon must be enabled. 
+
+```shell
+minikube start --cpus 4 --memory 10240 --addons registry --addons metrics-server --insecure-registry "10.0.0.0/24" --insecure-registry "localhost:5000"
+```
+
+To verify that the registry addon was property added you can execute this command:
+
+```shell
+minikube addons list | grep registry
+```
+
+```
+| registry                    | minikube | enabled ✅   | Google                         |
+| registry-aliases            | minikube | disabled     | 3rd party (unknown)            |
+| registry-creds              | minikube | disabled     | 3rd party (UPMC Enterprises)   |
+```
+
+
 2. kubectl installed
+
 3. SonataFlow operator installed if workflows are deployed
+
+To install the operator you can see [SonataFlow Installation](https://sonataflow.org/serverlessworkflow/latest/cloud/operator/install-serverless-operator.html).
 
 ## Use cases 
 
@@ -66,7 +89,7 @@ kubectl get pod -n data-index-usecase
 ```
 
 ```
-data-index-service-postgresql-5d76dc4468-69hm6   1/1     Running   1 (114s ago)   2m11s
+data-index-service-postgresql-5d76dc4468-69hm6   1/1     Running   0              2m11s
 postgres-7f78499688-j6282                        1/1     Running   0              2m11s
 ```
 
@@ -133,7 +156,7 @@ kubectl get pod -n usecase1
 
 ```
 NAME                                             READY   STATUS    RESTARTS       AGE
-data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   2 (113s ago)   2m11s
+data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   0              2m11s
 postgres-7f78499688-lc8n6                        1/1     Running   0              2m11s
 ```
 
@@ -231,7 +254,7 @@ kubectl get pod -n usecase2
 
 ```
 NAME                                             READY   STATUS    RESTARTS       AGE
-data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   2 (113s ago)   2m11s
+data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   0              2m11s
 postgres-7f78499688-lc8n6                        1/1     Running   0              2m11s
 ```
 
@@ -342,10 +365,10 @@ kubectl get pod -n usecase3
 ```
 
 ```
-NAME                                             READY   STATUS    RESTARTS      AGE
-data-index-service-postgresql-5d76dc4468-2cshp   1/1     Running   0             63s
-jobs-service-postgresql-87587f9b5-r4twj          1/1     Running   2 (42s ago)   63s
-postgres-7f78499688-sc9rj                        1/1     Running   0             62s
+NAME                                             READY   STATUS    RESTARTS   AGE
+data-index-service-postgresql-69f684d458-scxbr   1/1     Running   0          65s
+jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65s
+postgres-7f78499688-2dnj5                        1/1     Running   0          65s
 ```
 
 3. Install the workflow:
@@ -447,9 +470,9 @@ kubectl get pod -n usecase3-persistence
 
 ```
 NAME                                             READY   STATUS    RESTARTS      AGE
-data-index-service-postgresql-5d76dc4468-2cshp   1/1     Running   0             63s
-jobs-service-postgresql-87587f9b5-r4twj          1/1     Running   2 (42s ago)   63s
-postgres-7f78499688-sc9rj                        1/1     Running   0             62s
+data-index-service-postgresql-69f684d458-scxbr   1/1     Running   0          65s
+jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65s
+postgres-7f78499688-2dnj5                        1/1     Running   0          65s
 ```
 
 3. Install the workflow:
@@ -551,9 +574,9 @@ kubectl get pod -n usecase4
 
 ```
 NAME                                             READY   STATUS    RESTARTS      AGE
-data-index-service-postgresql-5d76dc4468-2cshp   1/1     Running   0             63s
-jobs-service-postgresql-87587f9b5-r4twj          1/1     Running   2 (42s ago)   63s
-postgres-7f78499688-sc9rj                        1/1     Running   0             62s
+data-index-service-postgresql-69f684d458-scxbr   1/1     Running   0          65s
+jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65s
+postgres-7f78499688-2dnj5                        1/1     Running   0          65s
 ```
 
 3. Install the workflows:

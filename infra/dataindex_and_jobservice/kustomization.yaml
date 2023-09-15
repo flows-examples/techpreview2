@@ -4,11 +4,5 @@ resources:
 
 configMapGenerator:
   - name: jobs-service-properties
-    literals:
-      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/sonataflow?currentSchema=jobs-service
-      - QUARKUS_DATASOURCE_REACTIVE_URL=postgresql://postgres:5432/sonataflow?search_path=jobs-service
-      - QUARKUS_SMALLRYE_HEALTH_CHECK__ORG_KIE_KOGITO_JOBS_SERVICE_MESSAGING_HTTP_HEALTH_KNATIVE_KSINKINJECTIONHEALTHCHECK__ENABLED=false
-      - KOGITO_SERVICE_URL=http://jobs-service-postgresql
-      - JOBS_SERVICE_PERSISTENCE=postgresql
-      - KOGITO_JOBS_SERVICE_HTTP_JOB_STATUS_CHANGE_EVENTS=true
-      - MP_MESSAGING_OUTGOING_KOGITO_JOB_SERVICE_JOB_STATUS_EVENTS_HTTP_URL=http://data-index-service-postgresql/jobs
+    files:
+      - application.properties

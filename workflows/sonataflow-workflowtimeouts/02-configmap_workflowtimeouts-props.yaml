@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   application.properties: |
-    kogito.service.url=http://workflowtimeouts
+    kogito.service.url=${kubernetes:services.v1/workflowtimeouts}
       
     # Job Service kogito-addons-quarkus-jobs-knative-eventing configuration
     mp.messaging.outgoing.kogito-job-service-job-request-events.connector=quarkus-http
