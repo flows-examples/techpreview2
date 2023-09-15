@@ -1,0 +1,13 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlowPlatform
+metadata:
+  name: sonataflow-platform
+spec:
+  build:
+    template:
+      buildArgs:
+      - name: QUARKUS_EXTENSIONS
+        value: org.kie.kogito:kogito-addons-quarkus-events-process:2.0.0-SNAPSHOT,org.kie.kogito:kogito-addons-quarkus-process-management:2.0.0-SNAPSHOT,org.kie.kogito:kogito-addons-quarkus-jobs-knative-eventing:2.0.0-SNAPSHOT
+    config:
+      strategyOptions:
+        KanikoBuildCacheEnabled: "true"

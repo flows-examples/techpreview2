@@ -1,20 +1,25 @@
 apiVersion: v1
 data:
   application.properties: |
+    kogito.service.url=http://workflowtimeouts
+      
+    # Job Service kogito-addons-quarkus-jobs-knative-eventing configuration
+    mp.messaging.outgoing.kogito-job-service-job-request-events.connector=quarkus-http
+    mp.messaging.outgoing.kogito-job-service-job-request-events.url=http://jobs-service-postgresql/v2/jobs/events
+    
     # Data Index configuration
     mp.messaging.outgoing.kogito-processinstances-events.connector=quarkus-http
-    mp.messaging.outgoing.kogito-processinstances-events.topic=kogito-processinstances-events
     mp.messaging.outgoing.kogito-processinstances-events.url=http://data-index-service-postgresql/processes
 
     mp.messaging.outgoing.kogito-usertaskinstances-events.connector=quarkus-http
-    mp.messaging.outgoing.kogito-usertaskinstances-events.topic=kogito-usertaskinstances-events
     mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql/tasks
-    mp.messaging.outgoing.kogito-usertaskinstances-events.method=POST
 
     mp.messaging.outgoing.kogito-variables-events.connector=quarkus-http
-    mp.messaging.outgoing.kogito-variables-events.topic=kogito-variables-events
     mp.messaging.outgoing.kogito-variables-events.url=http://data-index-service-postgresql/variables
-    mp.messaging.outgoing.kogito-variables-events.method=POST
+
+    # Skip user tasks and variables events sending.
+    kogito.events.usertasks.enabled=false
+    kogito.events.variables.enabled=false
 
     quarkus.log.category."io.smallrye.reactive.messaging".level = DEBUG
     quarkus.log.category."org.kie".level = DEBUG
@@ -23,5 +28,5 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app: greeting
-  name: greeting-props
+    app: workflowtimeouts
+  name: workflowtimeouts-props

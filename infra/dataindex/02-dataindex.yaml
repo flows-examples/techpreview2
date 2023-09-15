@@ -27,11 +27,13 @@ spec:
               name: http
               protocol: TCP
           env:
+            - name: KOGITO_DATA_INDEX_QUARKUS_PROFILE
+              value: http-events-support
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: QUARKUS_DATASOURCE_USERNAME 
+            - name: QUARKUS_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   key: POSTGRES_USER
@@ -41,9 +43,38 @@ spec:
                 secretKeyRef:
                   key: POSTGRES_PASSWORD
                   name: postgres-secrets
-          envFrom:
-            - configMapRef:
-                name: dataindex-properties
+          volumeMounts:
+            - name: application-config
+              mountPath: "/home/kogito/config"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+      volumes:
+        - name: application-config
+          configMap:
+            name: dataindex-properties
+      initContainers:
+        - name: init-postgres
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c', 'until nc -vz postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local 5432; do echo "Waiting for postgres server"; sleep 3; done;']
 ---
 apiVersion: v1
 kind: Service

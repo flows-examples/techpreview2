@@ -1,0 +1,29 @@
+apiVersion: v1
+data:
+  application.properties: |
+    kogito.service.url=${kubernetes:services.v1/callbackstatetimeouts}
+    
+    # Job Service kogito-addons-quarkus-jobs-knative-eventing configuration
+    mp.messaging.outgoing.kogito-job-service-job-request-events.connector=quarkus-http
+    mp.messaging.outgoing.kogito-job-service-job-request-events.url=http://jobs-service-postgresql/v2/jobs/events
+    
+    # Data Index configuration
+    mp.messaging.outgoing.kogito-processinstances-events.url=http://data-index-service-postgresql/processes
+
+    mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql/tasks
+
+    mp.messaging.outgoing.kogito-variables-events.url=http://data-index-service-postgresql/variables
+
+    # Skip user tasks and variables events sending.
+    kogito.events.usertasks.enabled=false
+    kogito.events.variables.enabled=false
+  
+    quarkus.log.category."io.smallrye.reactive.messaging".level = DEBUG
+    quarkus.log.category."org.kie".level = DEBUG
+    quarkus.log.category."io.quarkus.reactivemessaging".level = DEBUG
+    quarkus.log.category."io.vertx".level = DEBUG
+kind: ConfigMap
+metadata:
+  labels:
+    app: callbackstatetimeouts
+  name: callbackstatetimeouts-props

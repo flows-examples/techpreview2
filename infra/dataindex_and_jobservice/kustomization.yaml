@@ -1,0 +1,8 @@
+resources:
+- ../dataindex
+- 03-jobservice.yml
+
+configMapGenerator:
+  - name: jobs-service-properties
+    files:
+      - application.properties
