@@ -35,14 +35,14 @@ To install the operator you can see [SonataFlow Installation](https://sonataflow
 
 This is the list of available use cases:
 
-| Use case                                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Deploy Data Index Locally](#deploy-data-index-locally)                                           | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/>                                                                                                                                                                                                                                                                                                                                                                                                |
-| [Use case 1](#use-case-1)                                                  | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/> *  The `greeting` workflow (no persistence) configured to register the process events on the Data Index Service.                                                                                                                                                                                                                                                                               |
-| [Use case 2](#use-case-2)                                                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/> *  The `greeting` workflow (no persistence) <br/> * The `helloworkflow` (no persistence)<br/> * Workflows are configured to register the process events on the Data Index Service.                                                                                                                                                                                                             |
-| [Use case 3](#use-case-3)                                                  | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `callbackstatetimeouts` (no persistence) configured to: <br/> &nbsp;&nbsp;&nbsp; - register process events on the Data Index Service<br/> &nbsp;&nbsp;&nbsp; - create timers in the Jobs Service                                                                                          |
-| [Use case 3 persistence](#use-case-3-persistence) **(not working yet)**    | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `callbackstatetimeouts` (with persistence) configured to: <br/> &nbsp;&nbsp;&nbsp; - register process events on the Data Index Service<br/> &nbsp;&nbsp;&nbsp; - create timers in the Jobs Service                                                                                        |
-| [Use case 4](#use-case-4)                                                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `greetings` workflow (no persistence)<br/>  * The `callbackstatetimeouts` workflow (no persistence)<br/>  * The `workflowtimeouts` workflow (no persistence)<br/> * Workflows are configured to register process events on the Data Index Service and create timers on the Jobs Service   |
+| Use case                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Deploy Data Index Locally](#deploy-data-index-locally)           | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/>                                                                                                                                                                                                                                                                                                                                                                                              |
+| [Use case 1](#use-case-1)                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/> *  The `greeting` workflow (no persistence) configured to register the process events on the Data Index Service.                                                                                                                                                                                                                                                                             |
+| [Use case 2](#use-case-2)                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb<br/> *  The `greeting` workflow (no persistence) <br/> * The `helloworkflow` (no persistence)<br/> * Workflows are configured to register the process events on the Data Index Service.                                                                                                                                                                                                           |
+| [Use case 3](#use-case-3)                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `callbackstatetimeouts` (no persistence) configured to: <br/> &nbsp;&nbsp;&nbsp; - register process events on the Data Index Service<br/> &nbsp;&nbsp;&nbsp; - create timers in the Jobs Service                                                                                        |
+| [Use case 3 persistence](#use-case-3-persistence)              | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `callbackstatetimeouts` (with persistence) configured to: <br/> &nbsp;&nbsp;&nbsp; - register process events on the Data Index Service<br/> &nbsp;&nbsp;&nbsp; - create timers in the Jobs Service  <br/> * The sonataflow database tables are created by the user, i.e., no automatic DB initialization. This strategy is commonly used in production environment.                                                                            |
+| [Use case 4](#use-case-4)                          | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `greetings` workflow (no persistence)<br/>  * The `callbackstatetimeouts` workflow (no persistence)<br/>  * The `workflowtimeouts` workflow (no persistence)<br/> * Workflows are configured to register process events on the Data Index Service and create timers on the Jobs Service |
 
 > **NOTE:** To facilitate the switch between use cases, it's strongly recommended to install each use case in a dedicated namespace.
 
@@ -423,13 +423,12 @@ kubectl delete namespace usecase3
 
 ## Use case 3 persistence
 
-**This use case is not working yet**
-
 This use case is intended to represent an installation with:
 
 * A singleton Data Index Service with PostgreSQL persistence
 * A singleton Jobs Service with PostgreSQL persistence configured to send job status events to the Data Index Service.
 * The `callbackstateworkflow` workflow (with persistence)
+* The sonataflow database tables are created by the user, i.e., no automatic DB initialization. This strategy is commonly used in production environment.
 * The workflow is configured to register the process events on the Data Index Service.
 * The workflow is configured to create timers on the Jobs Service.
 
@@ -475,7 +474,63 @@ jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65
 postgres-7f78499688-2dnj5                        1/1     Running   0          65s
 ```
 
-3. Install the workflow:
+3. Visit [this link](https://repo1.maven.org/maven2/org/kie/kogito/kogito-ddl) and get the sonataflow DDL scripts to create the tables. 
+You must download the scripts according to the sonataflow version that you are using, for example, [../org/kie/kogito/kogito-ddl/1.44.1.Final/kogito-ddl-1.44.1.Final-db-scripts.zip](https://repo1.maven.org/maven2/org/kie/kogito/kogito-ddl/https://repo1.maven.org/maven2/org/kie/kogito/kogito-ddl/1.44.1.Final/kogito-ddl-1.44.1.Final-db-scripts.zip)
+and extract the xx.xx.x__create_runtime_PostgreSQL.sql file for postgresql, for example `postgresql/V1.35.0__create_runtime_PostgreSQL.sql`.
+
+4. Execute this command to expose the `postgres` service created in step 1, and get it's ip address and port. 
+
+```shell
+kubectl patch svc postgres -p '{"spec": {"type": "NodePort"}}' -n usecase3-persistence
+```
+
+To get the ip address and port of the exposed service you must execute this command:
+
+```shell
+minikube service postgres  --url -n usecase3-persistence
+```
+
+With the ip address and port calculated above, you must execute this command, and when you are asked for a password you must use `sonataflow`:
+
+```
+psql -H -h 192.168.49.2 -p 32321 -U sonataflow -d sonataflow -a -f V1.35.0__create_runtime_PostgreSQL.sql
+```
+
+After executing the command you will see an output similar to this:
+```shell
+-- To be used with kogito-addons-quarkus-persistence-jdbc for Quarkus or kogito-addons-springboot-persistence-jdbc for SpringBoot
+CREATE TABLE process_instances
+(
+    id              character(36)     NOT NULL,
+    payload         bytea             NOT NULL,
+    process_id      character varying NOT NULL,
+    version         bigint,
+    process_version character varying,
+    CONSTRAINT process_instances_pkey PRIMARY KEY (id)
+);
+CREATE TABLE
+CREATE INDEX idx_process_instances_process_id ON process_instances (process_id, id, process_version);
+CREATE INDEX
+CREATE TABLE correlation_instances
+(
+    id                     character(36)         NOT NULL,
+    encoded_correlation_id character varying(36) NOT NULL UNIQUE,
+    correlated_id          character varying(36) NOT NULL,
+    correlation            json                  NOT NULL,
+    version                bigint,
+    CONSTRAINT correlation_instances_pkey PRIMARY KEY (id)
+);
+CREATE TABLE
+CREATE INDEX idx_correlation_instances_encoded_id ON correlation_instances (encoded_correlation_id);
+CREATE INDEX
+CREATE INDEX idx_correlation_instances_correlated_id ON correlation_instances (correlated_id);
+CREATE INDEX
+```
+
+> **NOTE:** The DB service exposure and the database tables initialization is an example procedure. In production environments, even when the selected DDL is the same, you might probably apply another procedure to access the DB, etc.
+
+
+5. Install the workflow:
 
 ```shell
  kubectl kustomize usecases/usecase3-persistence | kubectl apply -f - -n usecase3-persistence
@@ -499,7 +554,7 @@ NAME                    PROFILE   VERSION   URL   READY   REASON
 callbackstatetimeouts             0.0.1           True      
 ```
 
-4. Expose the workflow and get the url:
+6. Expose the workflow and get the url:
 
 ```shell
 kubectl patch svc callbackstatetimeouts  -p '{"spec": {"type": "NodePort"}}' -n usecase3-persistence
@@ -509,9 +564,9 @@ kubectl patch svc callbackstatetimeouts  -p '{"spec": {"type": "NodePort"}}' -n 
  minikube service callbackstatetimeouts --url -n usecase3-persistence
  ```
 
-5. Create a workflow instance:
+7. Create a workflow instance:
 
-You must use the URL calculated in step 4.
+You must use the URL calculated in step 6.
 
 ```shell
 curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'     http://192.168.49.2:30707/callbackstatetimeouts
@@ -519,10 +574,10 @@ curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d 
 
 **To execute queries and see the workflows information see:** [Querying Index Queries](#querying-data-index)
 
-6. Clean the use case:
+8. Clean the use case:
 
 ```shell
-kubectl delete namespace usecase3
+kubectl delete namespace usecase3-persistence
 ```
 
 ## Use case 4
