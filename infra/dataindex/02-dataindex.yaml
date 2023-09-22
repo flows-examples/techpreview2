@@ -72,9 +72,9 @@ spec:
             name: dataindex-properties
       initContainers:
         - name: init-postgres
-          image: busybox:1.36
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until nc -vz postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local 5432; do echo "Waiting for postgres server"; sleep 3; done;']
+          command: ['sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;']
 ---
 apiVersion: v1
 kind: Service
