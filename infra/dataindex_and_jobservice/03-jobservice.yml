@@ -35,12 +35,12 @@ spec:
             - name: QUARKUS_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: POSTGRES_USER
+                  key: POSTGRESQL_USER
                   name: postgres-secrets
             - name: QUARKUS_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: POSTGRES_PASSWORD
+                  key: POSTGRESQL_PASSWORD
                   name: postgres-secrets
           volumeMounts:
             - name: application-config
