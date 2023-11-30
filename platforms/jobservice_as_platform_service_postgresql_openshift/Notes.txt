@@ -1,0 +1,47 @@
+kubectl create namespace test-platform1
+
+kubectl kustomize platforms/jobservice_as_platform_service_postgresql | kubectl apply -f - -n test-platform1
+
+kubectl get pod -n test-platform1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kubectl patch svc sonataflow-platform-jobs-service -p '{"spec": {"type": "NodePort"}}' -n test-platform
+
+
+curl -X GET -H 'Content-Type:application/json' -H 'Accept:text/plain' http://192.168.49.2:32407/callback
+
+
+curl -X GET -H 'Accept:text/plain' http://localhost:8080/callback
+
+curl -X GET -H 'Accept:text/plain' http://localhost:8080/q/health
+
+curl -X GET -H 'Accept:text/plain' http://localhost:8080/q/health/ready
+
+
+curl -X GET -H 'Accept:text/plain' http://10.111.141.243/q/health/ready
+
+curl -X GET -H 'Accept:text/plain' http://sonataflow-platform-jobs-service.test-platform/callback
+
+curl -X GET -H 'Accept:text/plain' http://sonataflow-platform-jobs-service.test-platform/q/health
+
+
+10.111.141.243
+
+
+missing stuff:
+kogito.service.url=http://http://sonataflow-platform-jobs-service.test-platform
+
+
+

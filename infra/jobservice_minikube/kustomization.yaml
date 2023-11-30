@@ -1,0 +1,17 @@
+resources:
+- 01-postgres.yaml
+- 03-jobservice.yml
+
+secretGenerator:
+  - name: postgres-secrets
+    literals:
+      - POSTGRES_USER=sonataflow
+      - POSTGRES_PASSWORD=sonataflow
+      - POSTGRES_DB=sonataflow
+      - PGDATA=/var/lib/postgresql/data/mydata
+
+configMapGenerator:
+  - name: jobs-service-properties
+    files:
+      - application.properties
+

@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  application.properties: |
+    
+    # Job Service kogito-addons-quarkus-jobs-knative-eventing configuration
+    mp.messaging.outgoing.kogito-job-service-job-request-events.connector=quarkus-http
+    mp.messaging.outgoing.kogito-job-service-job-request-events.url=http://sonataflow-platform-jobs-service/v2/jobs/events
+
+    # Skip user tasks and variables events sending.
+    kogito.events.processdefinitions.enabled=false
+    kogito.events.usertasks.enabled=false
+    kogito.events.variables.enabled=false
+    kogito.events.processinstances.enabled=false
+
+kind: ConfigMap
+metadata:
+  labels:
+    app: callbackstatetimeouts
+  name: callbackstatetimeouts-props

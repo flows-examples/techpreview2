@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: jobs-service-postgresql
+  name: jobs-service-postgresql
+spec:
+  replicas: 1
+  # remove after https://issues.redhat.com/browse/KOGITO-8311 is done
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jobs-service-postgresql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jobs-service-postgresql
+    spec:
+      containers:
+        - name: jobs-service-postgresql
+          image: quay.io/kiegroup/kogito-jobs-service-postgresql:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          env:
+#            - name: JOBS_SERVICE_PERSISTENCE
+#              value: postgresql
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: QUARKUS_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRESQL_USER
+                  name: postgres-secrets
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRESQL_PASSWORD
+                  name: postgres-secrets
+          volumeMounts:
+            - name: application-config
+              mountPath: "/home/kogito/config"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+      volumes:
+        - name: application-config
+          configMap:
+            name: jobs-service-properties
+      initContainers:
+        - name: init-postgres
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: jobs-service-postgresql
+  name: jobs-service-postgresql
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: jobs-service-postgresql
+  type: NodePort
