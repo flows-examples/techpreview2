@@ -4,3 +4,6 @@ resources:
 - ../../workflows/sonataflow-greeting
 - ../../workflows/sonataflow-callbackstatetimeouts
 - ../../workflows/sonataflow-workflowtimeouts
+
+sortOptions:
+  order: fifo
