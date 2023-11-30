@@ -2,7 +2,7 @@
 
 Collection of artifacts to test SonataFlow Use Cases TP2.
 
-## Prereqs for all the use cases
+## Prereqs for all the minikube use cases
 
 1. Minikube installed
 
@@ -24,16 +24,15 @@ minikube addons list | grep registry
 | registry-creds              | minikube | disabled     | 3rd party (UPMC Enterprises)   |
 ```
 
-
 2. kubectl installed
 
 3. SonataFlow operator installed if workflows are deployed
 
 To install the operator you can see [SonataFlow Installation](https://sonataflow.org/serverlessworkflow/latest/cloud/operator/install-serverless-operator.html).
 
-## Use cases 
+## Use cases (Minikube) 
 
-This is the list of available use cases:
+This is the list of available use cases for minikube:
 
 | Use case                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -45,6 +44,17 @@ This is the list of available use cases:
 | [Use case 4](#use-case-4)                               | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service + postgresdb</br> * Jobs Service + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `greetings` workflow (no persistence)<br/>  * The `callbackstatetimeouts` workflow (no persistence)<br/>  * The `workflowtimeouts` workflow (no persistence)<br/> * Workflows are configured to register process events on the Data Index Service and create timers on the Jobs Service                                                                                                                                                                                       |
 
 > **NOTE:** To facilitate the switch between use cases, it's strongly recommended to install each use case in a dedicated namespace.
+
+## Use cases (OpenShift)
+
+This is the list of available use cases for OpenShift:
+
+**NOTE:** Be sure your OpenShift instance has the SonataFlow Operator properly installed.
+
+| Use case                                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|-----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Use case 3 OpenShift](#use-case-3-openshift) | This use case deploys: <br/> * PostgreSQL Service<br/> * Data Index Service (operator managed deployment) + postgresdb</br> * Jobs Service (operator managed deployment) + postgresdb, configured to send the job events to the Data Index Service.<br/> * The `callbackstatetimeouts` (no persistence) configured to: <br/> &nbsp;&nbsp;&nbsp; - register process events on the Data Index Service<br/> &nbsp;&nbsp;&nbsp; - create timers in the Jobs Service |
+
 
 ## Deploy Data Index locally
 
@@ -707,6 +717,114 @@ curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d 
 ```shell
 kubectl delete namespace usecase4
 ```
+
+
+## Use case 3 OpenShift
+
+This use case is intended to represent an installation with:
+
+* A singleton Data Index Service (SonataFlow operator based deployment) with PostgreSQL persistence
+* A singleton Jobs Service(SonataFlow operator based deployment) with PostgreSQL persistence configured to send job status events to the Data Index Service.
+* The `callbackstateworkflow` workflow (no persistence)
+* The workflow is configured to register the process events on the Data Index Service.
+* The workflow is configured to create timers on the Jobs Service.
+
+### Procedure
+
+Open a terminal and run the following commands:
+
+1. Create the namespace:
+
+```shell
+kubectl create namespace usecase3-oc
+```
+
+2. Install the Data Index Service and the Jobs Service by using a Sonataflow Plaform
+
+```shell
+kubectl kustomize platforms/openshift-dataindex_and_jobservice_as_platform_service_postgresql | kubectl apply -f - -n usecase3-oc
+```
+
+```
+persistentvolumeclaim/postgres-pvc created
+deployment.apps/postgres created
+service/postgres created
+sonataflowplatform.sonataflow.org/sonataflow-platform created
+secret/postgres-secrets created
+```
+
+Give some time for the data index and the job service to start, you can check that it's running by executing.
+
+```shell
+kubectl get pod -n usecase3-oc
+```
+
+```
+NAME                                                      READY   STATUS    RESTARTS   AGE
+postgres-684bc5876b-69phn                                 1/1     Running   0          100s
+sonataflow-platform-data-index-service-6b6878d6cc-t5fzn   1/1     Running   0          100s
+sonataflow-platform-jobs-service-5d4f89cd9d-kcn54         1/1     Running   0          100s
+```
+
+3. Install the workflow:
+
+```shell
+ kubectl kustomize usecases/usecase3-oc | kubectl apply -f - -n usecase3-oc
+ ```
+
+```
+sonataflow.sonataflow.org/callbackstatetimeouts created
+```
+
+Give some time for the sonataflow operator to build and deploy the workflow.
+To check that the workflow is ready you can use this command.
+
+```shell
+kubectl get workflow -n usecase3-oc
+```
+
+```
+NAME                    PROFILE   VERSION   URL   READY   REASON
+callbackstatetimeouts             0.0.1           True      
+```
+
+4. Expose the workflow and get the url:
+
+TODO (create a route)
+
+5. Create a workflow instance:
+
+TODO (use the route)
+
+Using the OpenShift web console, go to the terminal of any of the pods in the namespace usecase3-oc and do.
+(NOTE: to create the first instance might take some time depending on your OpenShift instance specially if you are using OpenShift local)
+
+```shell
+curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'     http://callbackstatetimeouts/callbackstatetimeouts
+```
+
+You'll see an output like this: {"id":"6aa23153-2dbf-4da4-b4e0-95a87e582e46","workflowdata":{}}
+
+To query the data-index and see the information for the just created WF instance, do:
+
+```shell
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessInstances { id, processId, state, endpoint, serviceUrl, start, end } }"  }' http://sonataflow-platform-data-index-service.test-platform2-oc/graphql
+```
+
+You'll see an output like this: {"data":{"ProcessInstances":[{"id":"3c54f56c-1229-40b7-b27f-925f57bc73d8","processId":"callbackstatetimeouts","state":"COMPLETED","endpoint":"http://callbackstatetimeouts.test-platform2-oc/callbackstatetimeouts","serviceUrl":"http://callbackstatetimeouts.test-platform2-oc","start":"2024-01-11T15:49:26.688Z","end":null}]}}
+
+To query the data-index and see the information for the just created Job instance, do:
+
+```shell
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ Jobs { id, processId, processInstanceId, status, expirationTime, retries, endpoint, callbackEndpoint } }"  }' http://sonataflow-platform-data-index-service.test-platform2-oc/graphql
+```
+
+6. Clean the use case:
+
+```shell
+kubectl delete namespace usecase3-oc
+```
+
 
 ## Querying Data Index
 
