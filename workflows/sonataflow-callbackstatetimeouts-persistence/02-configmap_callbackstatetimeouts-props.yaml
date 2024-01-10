@@ -1,25 +1,21 @@
 apiVersion: v1
 data:
-  application.properties: |
-    # Uncomment this line if you want the service discovery to determine the kogito.service.url,
-    # otherwise the operator will automatically default this property with the cluster DNS name of the service
-    # http://callbackstatetimeouts.usecase3-persistence 
-    # kogito.service.url=${kubernetes:services.v1/callbackstatetimeouts}
-    
+  application.properties: |   
     # Job Service kogito-addons-quarkus-jobs-knative-eventing configuration
     mp.messaging.outgoing.kogito-job-service-job-request-events.connector=quarkus-http
     mp.messaging.outgoing.kogito-job-service-job-request-events.url=http://jobs-service-postgresql/v2/jobs/events
     
     # Data Index configuration
+    mp.messaging.outgoing.kogito-processdefinitions-events.url=http://data-index-service-postgresql/definitions
+
     mp.messaging.outgoing.kogito-processinstances-events.url=http://data-index-service-postgresql/processes
 
-    mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql/tasks
-
-    mp.messaging.outgoing.kogito-variables-events.url=http://data-index-service-postgresql/variables
-
-    # Skip user tasks and variables events sending.
+    #mp.messaging.outgoing.kogito-usertaskinstances-events.url=http://data-index-service-postgresql/tasks
+    
+    kogito.events.processdefinitions.enabled=true
+    kogito.events.processinstances.enabled=true
+    # Skip user tasks events sending.
     kogito.events.usertasks.enabled=false
-    kogito.events.variables.enabled=false
 
     # Kogito runtime persistence configurations
     kogito.persistence.type=jdbc
