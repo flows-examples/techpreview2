@@ -1,5 +1,4 @@
 resources:
-- ../../infra/service_discovery
 - ../../workflows/sonataflow-greeting
 
 sortOptions:
