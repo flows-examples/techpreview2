@@ -800,26 +800,44 @@ Using the OpenShift web console, go to the terminal of any of the pods in the na
 (NOTE: to create the first instance might take some time depending on your OpenShift instance specially if you are using OpenShift local)
 
 ```shell
-curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'     http://callbackstatetimeouts/callbackstatetimeouts
+curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'  http://callbackstatetimeouts/callbackstatetimeouts     
 ```
 
 You'll see an output like this: {"id":"6aa23153-2dbf-4da4-b4e0-95a87e582e46","workflowdata":{}}
 
+
 To query the data-index and see the information for the just created WF instance, do:
 
 ```shell
-curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessInstances { id, processId, state, endpoint, serviceUrl, start, end } }"  }' http://sonataflow-platform-data-index-service.test-platform2-oc/graphql
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessInstances { id, processId, state, endpoint, serviceUrl, start, end } }"  }' http://sonataflow-platform-data-index-service.usecase3-oc/graphql
 ```
 
 You'll see an output like this: {"data":{"ProcessInstances":[{"id":"3c54f56c-1229-40b7-b27f-925f57bc73d8","processId":"callbackstatetimeouts","state":"COMPLETED","endpoint":"http://callbackstatetimeouts.test-platform2-oc/callbackstatetimeouts","serviceUrl":"http://callbackstatetimeouts.test-platform2-oc","start":"2024-01-11T15:49:26.688Z","end":null}]}}
 
+
+```shell
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessDefinitions { id, serviceUrl, source } }"  }' http://sonataflow-platform-data-index-service.usecase3-oc/graphql
+```
+
 To query the data-index and see the information for the just created Job instance, do:
 
 ```shell
-curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ Jobs { id, processId, processInstanceId, status, expirationTime, retries, endpoint, callbackEndpoint } }"  }' http://sonataflow-platform-data-index-service.test-platform2-oc/graphql
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ Jobs { id, processId, processInstanceId, status, expirationTime, retries, endpoint, callbackEndpoint } }"  }' http://sonataflow-platform-data-index-service/graphql
 ```
 
-6. Clean the use case:
+6. Health Checks
+
+```shell
+curl -X GET http://callbackstatetimeouts/q/health
+```
+```shell
+curl -X GET http://sonataflow-platform-data-index-service.usecase3-oc/q/health
+```
+```shell
+curl -X GET http://sonataflow-platform-jobs-service.usecase3-oc/q/health
+```
+
+7. Clean the use case:
 
 ```shell
 kubectl delete namespace usecase3-oc
