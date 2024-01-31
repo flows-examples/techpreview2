@@ -3,11 +3,11 @@ kind: SonataFlowPlatform
 metadata:
   name: sonataflow-platform
 spec:
-  build:
-    template:
-      buildArgs:
-      - name: QUARKUS_EXTENSIONS
-        value: org.kie.kogito:kogito-addons-quarkus-jobs-knative-eventing:999-SNAPSHOT
+#  build:
+#    template:
+#      buildArgs:
+#      - name: QUARKUS_EXTENSIONS
+#        value: org.kie.kogito:kogito-addons-quarkus-jobs-knative-eventing:999-SNAPSHOT
   services:
     dataIndex:
       enabled: true
