@@ -825,7 +825,21 @@ To query the data-index and see the information for the just created Job instanc
 curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ Jobs { id, processId, processInstanceId, status, expirationTime, retries, endpoint, callbackEndpoint } }"  }' http://sonataflow-platform-data-index-service/graphql
 ```
 
-6. Health Checks
+6. Sonataflow Cluster Platform
+
+After executing previous steps we have a SonataFlowPlatform with the name sonataflow-platform in the namespace usecase3-oc
+
+Now we can create a SonataFlowClusterPlatform by executing
+
+```shell
+kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_postgresql/03-sonataflow_cluster_platform.yaml
+```
+
+After this, we can for example deploy the greeting workflow in a different namespace by configuring NO SonataFlowPlatform on it,
+and thanks to the SonataFlowClusterPlatform the workflow must be automatically configured to use the services configured
+in the SonataFlowPlatform configured in usecase3-oc
+
+7. Health Checks
 
 ```shell
 curl -X GET http://callbackstatetimeouts/q/health
@@ -837,7 +851,7 @@ curl -X GET http://sonataflow-platform-data-index-service.usecase3-oc/q/health
 curl -X GET http://sonataflow-platform-jobs-service.usecase3-oc/q/health
 ```
 
-7. Clean the use case:
+8. Clean the use case:
 
 ```shell
 kubectl delete namespace usecase3-oc
