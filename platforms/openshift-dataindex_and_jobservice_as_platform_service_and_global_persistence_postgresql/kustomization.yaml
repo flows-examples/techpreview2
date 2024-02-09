@@ -1,0 +1,18 @@
+resources:
+- 01-postgres.yaml
+- 02-sonataflow_platform.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+  - name: postgres-secrets
+    literals:
+      - POSTGRESQL_USER=sonataflow2
+      - POSTGRESQL_PASSWORD=sonataflow2
+      - POSTGRESQL_DATABASE=sonataflow2
+      - PGDATA=/var/lib/pgsql/data/userdata
+
+sortOptions:
+  order: fifo
+
