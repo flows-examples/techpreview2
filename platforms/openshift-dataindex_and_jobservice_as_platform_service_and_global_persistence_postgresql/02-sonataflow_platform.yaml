@@ -1,0 +1,36 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlowPlatform
+metadata:
+  name: sonataflow-platform
+spec:
+  build:
+    template:
+      buildArgs:
+        - name: QUARKUS_EXTENSIONS
+          value: org.kie.kogito:kogito-addons-quarkus-persistence-jdbc:999-SNAPSHOT,io.quarkus:quarkus-jdbc-postgresql:3.2.9.Final,io.quarkus:quarkus-agroal:3.2.9.Final
+  services:
+    dataIndex:
+      enabled: true
+      podTemplate:
+        initContainers:
+          - name: init-postgres
+            image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+    jobService:
+      enabled: true
+      podTemplate:
+        initContainers:
+          - name: init-postgres
+            image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+  persistence:
+    postgresql:
+      secretRef:
+        name: postgres-secrets
+        userKey: POSTGRESQL_USER
+        passwordKey: POSTGRESQL_PASSWORD
+      serviceRef:
+        name: postgres
+        databaseName: sonataflow2
