@@ -6,7 +6,8 @@ metadata:
     sonataflow.org/description: Callback State Timeouts Example k8s
     sonataflow.org/version: 0.0.1
 spec:
-  persistence: {}
+  # No persistence defined (persistence = nil), if the SPF has a configured persistence, the WF must use that configuration.
+  # In that case, the schema name for this workflow will be automatically determined from the WF name -> callbackstatetimeouts
   flow:
     start: PrintStartMessage
     events:

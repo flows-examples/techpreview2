@@ -8,18 +8,18 @@
 
 3) wait for DI and JS to start
 
-    kubectl get pods -m usecase3-platform-persistence-oc
+    kubectl get pods -n usecase3-platform-persistence-oc
 
 
------------------------------------
-Deploy the callbackstate timeouts
------------------------------------
+-----------------------------------------
+Deploy the callbackstatetimeouts workflow
+-----------------------------------------
 
 1) Create the Data base tables and the schema callbackstatetimeouts
 
 Go to the terminal in the OpenShift webconsole for the POD of the postgres service
 
-psql -U sonataflow2
+psql sonataflow_pfdb -U sonataflow
 
 some commands:
 
@@ -28,8 +28,6 @@ some commands:
 \dn - List schemas
 \dt - List tables inside public schemas
 \dt schema1. - List tables inside particular schemas. For eg: 'schema1'.
-
-select current_database();
 
 create schema callbackstatetimeouts;
 
@@ -66,7 +64,8 @@ CREATE INDEX idx_correlation_instances_correlated_id ON correlation_instances (c
 
 kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql/04-sonataflow_callbackstatetimeouts.sw.yaml -n usecase3-platform-persistence-oc
 
-kubectl get workflows -n
+
+kubectl get workflows -n usecase3-platform-persistence-oc
 
 3) Create an instance and verify
 
@@ -74,9 +73,9 @@ curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d 
 
 
 
------------------------------------
-Deploy the workflowtimeouts timeouts
------------------------------------
+-------------------------------------
+Deploy the workflowtimeouts workflow
+-------------------------------------
 
 1) Create the Data base tables and the schema workflowtimeouts
 
@@ -84,9 +83,27 @@ create schema wf_timeouts;
 
 set schema 'wf_timeouts';
 
-Create same tables as in previous WF
+Create same tables as in previous WF.
 
+2) deploy the workflowtimeouts workflow
 
 kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql/05-sonataflow_workflowtimeouts.yaml -n usecase3-platform-persistence-oc
 
-The SonataFlow "workflowtimeouts" is invalid: spec.persistence.postgresql: Invalid value: 1: spec.persistence.postgresql in body should have at least 2 properties
+3) Create an instance and verify
+
+curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'  http://workflowtimeouts/workflowtimeouts
+
+
+-----------------------------------
+Deploy the helloworld timeouts
+-----------------------------------
+
+No schema initialization is required for this WF
+
+1) deploy the helloworld workflow
+
+kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql/06-sonataflow_helloworld.yaml -n usecase3-platform-persistence-oc
+
+2) Create an instance and verify
+
+curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'  http://helloworld/helloworld
