@@ -8,9 +8,9 @@ generatorOptions:
 secretGenerator:
   - name: postgres-secrets
     literals:
-      - POSTGRESQL_USER=sonataflow2
-      - POSTGRESQL_PASSWORD=sonataflow2
-      - POSTGRESQL_DATABASE=sonataflow2
+      - POSTGRESQL_USER=sonataflow
+      - POSTGRESQL_PASSWORD=sonataflow
+      - POSTGRESQL_DATABASE=sonataflow_pfdb
       - PGDATA=/var/lib/pgsql/data/userdata
 
 sortOptions:

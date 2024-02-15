@@ -6,9 +6,18 @@ metadata:
     sonataflow.org/description: Workflow Timeouts Example k8s
     sonataflow.org/version: 0.0.1
 spec:
+  # Persistence is defined, and thus, this configuration must be applied independently of the SFP persistence configuration.
   persistence:
     postgresql:
+      secretRef:
+        name: postgres-secrets
+        userKey: POSTGRESQL_USER
+        passwordKey: POSTGRESQL_PASSWORD
       serviceRef:
+        name: postgres
+        # use the same DB for simplicity
+        databaseName: sonataflow_pfdb
+        # setting schema name here intentionally, if not set, the WF name will be used instead.
         databaseSchema: wf_timeouts
   flow:
     start: PrintStartMessage
