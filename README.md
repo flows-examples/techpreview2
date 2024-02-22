@@ -129,6 +129,9 @@ kubectl delete namespace data-index-usecase
 
 This use case is intended to represent an installation with:
 
+> **NOTE:** Installation of the Data Index is now also performed by the SonataFlowOperator.
+
+
 * A singleton Data Index Service with PostgreSQL persistence
 * The `greeting` workflow (no persistence), that is configured to register events to the Data Index Service. 
 
@@ -144,18 +147,15 @@ kubectl create namespace usecase1
 
 2. Deploy the Data Index Service:
 ```shell
-kubectl kustomize infra/dataindex | kubectl apply -f - -n usecase1
+kubectl kustomize platforms/data_index_as_platform_service_postgresql | kubectl apply -f - -n usecase1
 ```
 
 ```
-configmap/dataindex-properties-hg9ff8bff5 created
-secret/postgres-secrets-22tkgc2dt7 created
-service/data-index-service-postgresql created
-service/postgres created
 persistentvolumeclaim/postgres-pvc created
-deployment.apps/data-index-service-postgresql created
 deployment.apps/postgres created
-
+service/postgres created
+sonataflowplatform.sonataflow.org/sonataflow-platform created
+secret/postgres-secrets created
 ```
 
 Give some time for the data index to start, you can check that it's running by executing.
@@ -165,9 +165,10 @@ kubectl get pod -n usecase1
 ```
 
 ```
-NAME                                             READY   STATUS    RESTARTS       AGE
-data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   0              2m11s
-postgres-7f78499688-lc8n6                        1/1     Running   0              2m11s
+NAME                                                      READY   STATUS      RESTARTS   AGE
+postgres-6cb59fb8c5-726jw                                 1/1     Running     0          92s
+sonataflow-platform-cache                                 0/1     Completed   0          92s
+sonataflow-platform-data-index-service-648d65bf7c-6rrhf   1/1     Running     0          67s
 ```
 
 3. Deploy the workflow:
@@ -177,8 +178,6 @@ postgres-7f78499688-lc8n6                        1/1     Running   0            
  ```
 
 ```
-configmap/greeting-props created
-sonataflow.sonataflow.org/greeting created
 sonataflowplatform.sonataflow.org/sonataflow-platform created
 ```
 
