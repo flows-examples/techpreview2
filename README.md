@@ -224,6 +224,8 @@ kubectl delete namespace usecase1
 
 This use case is intended to represent an installation with:
 
+> **NOTE:** Installation of the Data Index is now also performed by the SonataFlowOperator.
+
 * A singleton Data Index Service with PostgreSQL persistence
 * The `greeting` workflow (no persistence)
 * The `helloworkflow` workflow (no persistence)
@@ -241,18 +243,15 @@ kubectl create namespace usecase2
 
 2. Deploy the Data Index Service:
 ```shell
-kubectl kustomize infra/dataindex | kubectl apply -f - -n usecase2
+kubectl kustomize platforms/data_index_as_platform_service_postgresql | kubectl apply -f - -n usecase2
 ```
 
 ```
-configmap/dataindex-properties-hg9ff8bff5 created
-secret/postgres-secrets-22tkgc2dt7 created
-service/data-index-service-postgresql created
-service/postgres created
 persistentvolumeclaim/postgres-pvc created
-deployment.apps/data-index-service-postgresql created
 deployment.apps/postgres created
-
+service/postgres created
+sonataflowplatform.sonataflow.org/sonataflow-platform created
+secret/postgres-secrets created
 ```
 
 Give some time for the data index to start, you can check that it's running by executing.
@@ -262,9 +261,9 @@ kubectl get pod -n usecase2
 ```
 
 ```
-NAME                                             READY   STATUS    RESTARTS       AGE
-data-index-service-postgresql-5d76dc4468-lb259   1/1     Running   0              2m11s
-postgres-7f78499688-lc8n6                        1/1     Running   0              2m11s
+postgres-6cb59fb8c5-tnpm6                                 1/1     Running     0          114s
+sonataflow-platform-cache                                 0/1     Completed   0          114s
+sonataflow-platform-data-index-service-648d65bf7c-pwkpg   1/1     Running     0          64s
 ```
 
 3. Deploy the workflows:
@@ -274,11 +273,8 @@ postgres-7f78499688-lc8n6                        1/1     Running   0            
  ```
 
 ```
-configmap/greeting-props created
-configmap/helloworld-props created
 sonataflow.sonataflow.org/greeting created
 sonataflow.sonataflow.org/helloworld created
-sonataflowplatform.sonataflow.org/sonataflow-platform created
 ```
 
 Give some time for the sonataflow operator to build and deploy the workflows.
