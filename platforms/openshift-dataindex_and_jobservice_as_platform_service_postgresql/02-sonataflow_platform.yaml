@@ -8,11 +8,15 @@ spec:
       enabled: true
       persistence:
         postgresql:
-          jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=data-index-service
           secretRef:
             name: postgres-secrets
             userKey: POSTGRESQL_USER
             passwordKey: POSTGRESQL_PASSWORD
+          # use serviceRef to show this alternative.
+          serviceRef:
+            name: postgres
+            databaseName: sonataflow
+            databaseSchema: data-index-service
       podTemplate:
         initContainers:
           - name: init-postgres
@@ -23,6 +27,7 @@ spec:
       enabled: true
       persistence:
         postgresql:
+          # use jdbcUrl to show this alternative
           jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=jobs-service
           secretRef:
             name: postgres-secrets
