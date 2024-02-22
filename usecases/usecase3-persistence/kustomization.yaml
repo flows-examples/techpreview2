@@ -1,5 +1,5 @@
 resources:
-- ../../platforms/dataindex_and_jobservice_platform_persistence
+#- ../../platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence
 - ../../workflows/sonataflow-callbackstatetimeouts-persistence
 
 sortOptions:
