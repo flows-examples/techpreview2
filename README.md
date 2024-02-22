@@ -333,6 +333,8 @@ kubectl delete namespace usecase2
 
 This use case is intended to represent an installation with:
 
+> **NOTE:** Installation of the Data Index and Jobs Service is now also performed by the SonataFlowOperator.
+
 * A singleton Data Index Service with PostgreSQL persistence
 * A singleton Jobs Service with PostgreSQL persistence configured to send job status events to the Data Index Service.
 * The `callbackstateworkflow` workflow (no persistence)
@@ -352,33 +354,31 @@ kubectl create namespace usecase3
 2. Install the Data Index Service and the Jobs Service:
 
 ```shell
-kubectl kustomize infra/dataindex_and_jobservice | kubectl apply -f - -n usecase3
+kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql | kubectl apply -f - -n usecase3
 ```
 
 ```
-configmap/dataindex-properties-hg9ff8bff5 created
-configmap/jobs-service-properties-9bf9cg9b9f created
-secret/postgres-secrets-22tkgc2dt7 created
-service/data-index-service-postgresql created
-service/jobs-service-postgresql created
-service/postgres created
 persistentvolumeclaim/postgres-pvc created
-deployment.apps/data-index-service-postgresql created
-deployment.apps/jobs-service-postgresql created
 deployment.apps/postgres created
+service/postgres created
+sonataflowplatform.sonataflow.org/sonataflow-platform created
+secret/postgres-secrets created
+
 ```
 
 Give some time for the data index and the job service to start, you can check that it's running by executing.
+It might take some time for the SonataFlowPlatform to start them.
 
 ```shell
 kubectl get pod -n usecase3
 ```
 
 ```
-NAME                                             READY   STATUS    RESTARTS   AGE
-data-index-service-postgresql-69f684d458-scxbr   1/1     Running   0          65s
-jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65s
-postgres-7f78499688-2dnj5                        1/1     Running   0          65s
+NAME                                                      READY   STATUS      RESTARTS   AGE
+postgres-6cb59fb8c5-9dfkg                                 1/1     Running     0          2m40s
+sonataflow-platform-cache                                 0/1     Completed   0          2m40s
+sonataflow-platform-data-index-service-648d65bf7c-54wls   1/1     Running     0          2m5s
+sonataflow-platform-jobs-service-7f89654544-v9c86         1/1     Running     0          2m5s
 ```
 
 3. Install the workflow:
@@ -388,9 +388,7 @@ postgres-7f78499688-2dnj5                        1/1     Running   0          65
  ```
 
 ```
-configmap/callbackstatetimeouts-props created
 sonataflow.sonataflow.org/callbackstatetimeouts created
-sonataflowplatform.sonataflow.org/sonataflow-platform created
 ```
 
 Give some time for the sonataflow operator to build and deploy the workflow.
@@ -866,16 +864,47 @@ You can use the public Data Index endpoint to play around with the GraphiQL inte
 
 This procedure apply to all use cases with that deploys the Data Index Service.
 
-1. Get the Data Index Url:
+1. Get the Data Index Url: (SonataFlowPlatform installation)
+
+If the Data Index was installed with the SonataFlowPlatform, you can expose it using an Ingress.
+
+To do that you must:
+
+Enable the ingress controller:
+
+```shell
+minikube addons enable ingress
+```
+
+Create the following Ingress:
+
+```shell
+kubectl apply -f infra/common/data-index-service-ingress.yaml -n my_namespace
+```
+
+After this, you can access the Data Index graphiql interface doing
+
+```shell
+ minikube ip
+```
+
+And opening the following url with the returned ip: http://192.168.49.2/graphiql/
+
+2. Get the Data Index Url: (manual installation)
+
+If the Data Index has been installed manually you can do:
+
+```shell
+kubectl patch svc sonataflow-platform-data-index-service -p '{"spec": {"type": "NodePort"}}' -n my_usecase
+```
 
 ```shell
 minikube service data-index-service-postgresql --url -n my_usecase
 ```
 
-2. Open the GrahiqlUI
+Using the returned url, open a browser window like: http://192.168.49.2:32409/graphiql/, note that IP and port will be different in your installation, and don't forget to add the last slash "/" to the url, otherwise the GraphiqlUI won't be opened.
 
-Using the url returned in 1, open a browser window in the following url http://192.168.49.2:32409/graphiql/, note that IP and port will be different in your installation, and don't forget to add the last slash "/" to the url, otherwise the GraphiqlUI won't be opened.  
-
+3. GrahiqlUI
 
 To see the process instances information you can execute this query:
 
