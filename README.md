@@ -433,6 +433,8 @@ kubectl delete namespace usecase3
 
 This use case is intended to represent an installation with:
 
+> **NOTE:** Installation of the Data Index and Jobs Service is now also performed by the SonataFlowOperator.
+
 * A singleton Data Index Service with PostgreSQL persistence
 * A singleton Jobs Service with PostgreSQL persistence configured to send job status events to the Data Index Service.
 * The `callbackstateworkflow` workflow (with persistence)
@@ -454,20 +456,15 @@ kubectl create namespace usecase3-persistence
 2. Install the Data Index Service and the Jobs Service:
 
 ```shell
-kubectl kustomize infra/dataindex_and_jobservice | kubectl apply -f - -n usecase3-persistence
+kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence | kubectl apply -f - -n usecase3-persistence
 ```
 
 ```
-configmap/dataindex-properties-hg9ff8bff5 created
-configmap/jobs-service-properties-9bf9cg9b9f created
-secret/postgres-secrets-22tkgc2dt7 created
-service/data-index-service-postgresql created
-service/jobs-service-postgresql created
-service/postgres created
 persistentvolumeclaim/postgres-pvc created
-deployment.apps/data-index-service-postgresql created
-deployment.apps/jobs-service-postgresql created
 deployment.apps/postgres created
+service/postgres created
+sonataflowplatform.sonataflow.org/sonataflow-platform created
+secret/postgres-secrets created
 ```
 
 Give some time for the data index and the job service to start, you can check that it's running by executing.
@@ -477,10 +474,11 @@ kubectl get pod -n usecase3-persistence
 ```
 
 ```
-NAME                                             READY   STATUS    RESTARTS      AGE
-data-index-service-postgresql-69f684d458-scxbr   1/1     Running   0          65s
-jobs-service-postgresql-5c9b74cfc5-qnvkh         1/1     Running   0          65s
-postgres-7f78499688-2dnj5                        1/1     Running   0          65s
+NAME                                                      READY   STATUS      RESTARTS   AGE
+postgres-6cb59fb8c5-2mz7k                                 1/1     Running     0          2m17s
+sonataflow-platform-cache                                 0/1     Completed   0          2m17s
+sonataflow-platform-data-index-service-648d65bf7c-828s4   1/1     Running     0          112s
+sonataflow-platform-jobs-service-7f89654544-qg5kw         1/1     Running     0          112s
 ```
 
 3. Visit [this link](https://repo1.maven.org/maven2/org/kie/kogito/kogito-ddl) and get the sonataflow DDL scripts to create the tables. 
@@ -546,9 +544,7 @@ CREATE INDEX
  ```
 
 ```
-configmap/callbackstatetimeouts-props created
 sonataflow.sonataflow.org/callbackstatetimeouts created
-sonataflowplatform.sonataflow.org/sonataflow-platform created
 ```
 
 Give some time for the sonataflow operator to build and deploy the workflow.
