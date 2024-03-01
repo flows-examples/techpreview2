@@ -22,6 +22,12 @@ spec:
         image: registry.access.redhat.com/ubi9/ubi-minimal:latest
         imagePullPolicy: IfNotPresent
         command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+    container:
+      env:
+        # by now, when the WF persistence is initialized we don't set migration to true.
+        # we can re-evaluate to default to true.
+        - name: QUARKUS_FLYWAY_MIGRATE_AT_START
+          value: 'false'
   flow:
     start: PrintStartMessage
     events:

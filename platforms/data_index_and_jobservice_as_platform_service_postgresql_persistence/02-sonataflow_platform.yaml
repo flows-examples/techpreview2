@@ -10,7 +10,8 @@ spec:
           value: org.kie.kogito:kogito-addons-quarkus-persistence-jdbc:999-SNAPSHOT,io.quarkus:quarkus-jdbc-postgresql:3.2.9.Final,io.quarkus:quarkus-agroal:3.2.9.Final
     config:
       strategyOptions:
-        KanikoBuildCacheEnabled: "true"
+#        KanikoBuildCacheEnabled: "true" is not working
+        KanikoBuildCacheEnabled: "false"
   services:
     dataIndex:
       enabled: true

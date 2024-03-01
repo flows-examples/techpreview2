@@ -4,9 +4,15 @@ metadata:
   name: sonataflow-platform
 spec:
   build:
+    template:
+      buildArgs:
+        - name: QUARKUS_EXTENSIONS
+          value: org.kie.kogito:kogito-addons-quarkus-persistence-jdbc:999-SNAPSHOT,io.quarkus:quarkus-jdbc-postgresql:3.2.9.Final,io.quarkus:quarkus-agroal:3.2.9.Final
+        - name: MAVEN_ARGS_APPEND
+          value: -Dkogito.persistence.type=jdbc -Dkogito.persistence.proto.marshaller=false -Dkogito.persistence.query.timeout.millis=10000 -Dquarkus.datasource.db-kind=postgresql
     config:
       strategyOptions:
-#        KanikoBuildCacheEnabled: "true" is not working
+#               KanikoBuildCacheEnabled: "true" is not working
         KanikoBuildCacheEnabled: "false"
   services:
     dataIndex:
