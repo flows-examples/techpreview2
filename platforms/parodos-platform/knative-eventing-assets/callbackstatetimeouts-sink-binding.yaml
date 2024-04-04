@@ -1,0 +1,22 @@
+# Sink binding already created by the operator current state of the art.
+
+apiVersion: sources.knative.dev/v1
+kind: SinkBinding
+metadata:
+  labels:
+    app: callbackstatetimeouts
+    sonataflow.org/workflow-app: callbackstatetimeouts
+  name: callbackstatetimeouts-sb
+  namespace: test1
+spec:
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+      namespace: sonataflow-infra
+  subject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: callbackstatetimeouts
+    namespace: test1

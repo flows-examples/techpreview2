@@ -1,0 +1,18 @@
+resources:
+- 6340056-sonataflow-testing-pull-secret.yaml
+- 01-postgres.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+  - name: sonataflow-psql-postgresql
+    literals:
+      - POSTGRESQL_USER=sonataflow
+      - POSTGRESQL_PASSWORD=sonataflow
+      - POSTGRESQL_DATABASE=sonataflow
+      - PGDATA=/var/lib/pgsql/data/userdata
+
+sortOptions:
+  order: fifo
+
