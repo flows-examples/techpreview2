@@ -1,0 +1,54 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlowPlatform
+metadata:
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-delete-policy: hook-fail
+    helm.sh/hook-weight: "2"
+  name: sonataflow-platform
+  namespace: sonataflow-infra
+spec:
+  build:
+    config:
+      registry: {}
+      strategy: platform
+      timeout: 5m0s
+    template:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 250m
+          memory: 64Mi
+      timeout: 0s
+  devMode: {}
+  services:
+    dataIndex:
+      enabled: true
+      persistence:
+        postgresql:
+          secretRef:
+            name: sonataflow-psql-postgresql
+            passwordKey: POSTGRESQL_PASSWORD
+            userKey: POSTGRESQL_USER
+          serviceRef:
+            name: sonataflow-psql-postgresql
+            namespace: sonataflow-infra
+      podTemplate:
+        container:
+          resources: {}
+    jobService:
+      enabled: true
+      persistence:
+        postgresql:
+          secretRef:
+            name: sonataflow-psql-postgresql
+            passwordKey: POSTGRESQL_PASSWORD
+            userKey: POSTGRESQL_USER
+          serviceRef:
+            name: sonataflow-psql-postgresql
+            namespace: sonataflow-infra
+      podTemplate:
+        container:
+          resources: {}

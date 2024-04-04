@@ -1,0 +1,115 @@
+# Triggers that the operator will have to create at some point
+# as part of the data-index deployment.
+# TODO: review the list, maybe for the workflows we don't need these (ProcessInstanceSLADataEvent, ProcessInstanceVariableDataEvent)
+
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-definition-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessDefinitionEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /definitions
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-error-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessInstanceErrorDataEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /processes
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-node-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessInstanceNodeDataEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /processes
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-sla-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessInstanceSLADataEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /processes
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-state-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessInstanceStateDataEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /processes
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-process-variable-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: ProcessInstanceVariableDataEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /processes
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-data-index-service-jobs-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: JobEvent
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-data-index-service
+    uri: /jobs
