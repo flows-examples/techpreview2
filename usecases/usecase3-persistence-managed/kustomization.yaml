@@ -1,0 +1,5 @@
+resources:
+- ../../workflows/sonataflow-callbackstatetimeouts-persistence-managed
+
+sortOptions:
+  order: fifo

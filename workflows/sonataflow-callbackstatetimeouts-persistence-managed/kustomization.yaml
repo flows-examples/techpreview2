@@ -1,0 +1,3 @@
+resources:
+- 02-configmap_callbackstatetimeouts-props.yaml
+- 04-sonataflow_callbackstatetimeouts.sw.yaml
