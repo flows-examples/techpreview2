@@ -5,10 +5,8 @@ metadata:
 spec:
   build:
     template:
-      buildArgs:
-        - name: QUARKUS_EXTENSIONS
-          value: org.kie:kie-addons-quarkus-persistence-jdbc:999-SNAPSHOT,io.quarkus:quarkus-jdbc-postgresql:3.2.10.Final,io.quarkus:quarkus-agroal:3.2.10.Final
     config:
+      baseImage: quay.io/wmedvede/kogito-swf-builder:999-SNAPSHOT
       strategyOptions:
 #        KanikoBuildCacheEnabled: "true" is not working
         KanikoBuildCacheEnabled: "false"
@@ -17,7 +15,10 @@ spec:
       enabled: true
       persistence:
         postgresql:
-          jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=data-index-service
+          serviceRef:
+            name: postgres
+            databaseName: sonataflow
+            databaseSchema: data-index-schema
           secretRef:
             name: postgres-secrets
             userKey: POSTGRES_USER
@@ -32,7 +33,10 @@ spec:
       enabled: true
       persistence:
         postgresql:
-          jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=jobs-service
+          serviceRef:
+            name: postgres
+            databaseName: sonataflow
+            databaseSchema: jobs-service-schema
           secretRef:
             name: postgres-secrets
             userKey: POSTGRES_USER
