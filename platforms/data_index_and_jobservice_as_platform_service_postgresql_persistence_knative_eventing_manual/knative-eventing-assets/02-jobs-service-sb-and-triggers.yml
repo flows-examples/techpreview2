@@ -1,0 +1,49 @@
+# SinkBinding and Triggers that the operator will have to create at some point
+# as part of the jobs-service deployment.
+
+apiVersion: sources.knative.dev/v1
+kind: SinkBinding
+metadata:
+  name: sonataflow-platform-jobs-service-sb
+spec:
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+  subject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sonataflow-platform-jobs-service
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-jobs-service-create-job-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: job.create
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-jobs-service
+    uri: /v2/jobs/events
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: jobs-service-postgresql-cancel-job-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: job.delete
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-jobs-service
+    uri: /v2/jobs/events

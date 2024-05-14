@@ -1,0 +1,55 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlowPlatform
+metadata:
+  name: sonataflow-platform
+spec:
+  build:
+    template:
+    config:
+      baseImage: quay.io/wmedvede/kogito-swf-builder:999-SNAPSHOT
+      strategyOptions:
+#        KanikoBuildCacheEnabled: "true" is not working
+        KanikoBuildCacheEnabled: "false"
+  services:
+    dataIndex:
+      enabled: true
+      persistence:
+        postgresql:
+          serviceRef:
+            name: postgres
+            databaseName: sonataflow
+            databaseSchema: data-index-schema
+          secretRef:
+            name: postgres-secrets
+            userKey: POSTGRES_USER
+            passwordKey: POSTGRES_PASSWORD
+      podTemplate:
+        initContainers:
+          - name: init-postgres
+            image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+    jobService:
+      enabled: true
+      persistence:
+        postgresql:
+          serviceRef:
+            name: postgres
+            databaseName: sonataflow
+            databaseSchema: jobs-service-schema
+          secretRef:
+            name: postgres-secrets
+            userKey: POSTGRES_USER
+            passwordKey: POSTGRES_PASSWORD
+      podTemplate:
+        container:
+          env:
+            - name: MP_MESSAGING_OUTGOING_KOGITO_JOB_SERVICE_JOB_STATUS_EVENTS_HTTP_URL
+              value: ${K_SINK}
+            - name: QUARKUS_SMALLRYE_HEALTH_CHECK__ORG_KIE_KOGITO_JOBS_SERVICE_MESSAGING_HTTP_HEALTH_KNATIVE_KSINKINJECTIONHEALTHCHECK__ENABLED
+              value: "true"
+        initContainers:
+                - name: init-postgres
+                  image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+                  imagePullPolicy: IfNotPresent
+                  command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
