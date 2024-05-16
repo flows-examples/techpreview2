@@ -4,11 +4,8 @@ metadata:
   name: sonataflow-platform
 spec:
   build:
-    template:
     config:
-      baseImage: quay.io/wmedvede/kogito-swf-builder:999-SNAPSHOT
       strategyOptions:
-#        KanikoBuildCacheEnabled: "true" is not working
         KanikoBuildCacheEnabled: "false"
   services:
     dataIndex:
