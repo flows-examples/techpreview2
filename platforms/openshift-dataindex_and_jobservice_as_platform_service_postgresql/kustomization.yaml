@@ -1,4 +1,5 @@
 resources:
+- 6340056-sonataflow-testing-pull-secret.yaml
 - 01-postgres.yaml
 - 02-sonataflow_platform.yaml
 
