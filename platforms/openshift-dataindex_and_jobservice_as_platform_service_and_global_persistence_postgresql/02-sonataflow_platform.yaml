@@ -30,4 +30,4 @@ spec:
         passwordKey: POSTGRESQL_PASSWORD
       serviceRef:
         name: postgres
-        databaseName: sonataflow_pfdb
+        databaseName: sonataflow
