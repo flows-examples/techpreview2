@@ -4,14 +4,9 @@ metadata:
   name: sonataflow-platform
 spec:
   build:
-    template:
-      buildArgs:
-        - name: QUARKUS_EXTENSIONS
-          value: org.kie:kie-addons-quarkus-persistence-jdbc:999-SNAPSHOT,io.quarkus:quarkus-jdbc-postgresql:3.2.10.Final,io.quarkus:quarkus-agroal:3.2.10.Final
     config:
       strategyOptions:
-#        KanikoBuildCacheEnabled: "true" is not working
-        KanikoBuildCacheEnabled: "false"
+        KanikoBuildCacheEnabled: "true"
   services:
     dataIndex:
       enabled: true
