@@ -1,25 +1,27 @@
 1) create the namespace
 
-    kubectl create namespace usecase3-platform-persistence-oc
+kubectl create namespace usecase3-platform-persistence-oc
 
 2) create the SonataFlowPlatform
 
-    kubectl kustomize platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql | kubectl apply -f - -n usecase3-platform-persistence-oc
+kubectl kustomize platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql | kubectl apply -f - -n usecase3-platform-persistence-oc
 
 3) wait for DI and JS to start
 
-    kubectl get pods -n usecase3-platform-persistence-oc
+kubectl get pods -n usecase3-platform-persistence-oc
 
 
 -----------------------------------------
-Deploy the callbackstatetimeouts workflow
+To initialize the DB manually apply these steps
 -----------------------------------------
+
+This step is no longer needed since we have configured quarkus.flyway.migrate-at-start=true
 
 1) Create the Data base tables and the schema callbackstatetimeouts
 
 Go to the terminal in the OpenShift webconsole for the POD of the postgres service
 
-psql sonataflow_pfdb -U sonataflow
+psql sonataflow -U sonataflow
 
 some commands:
 
@@ -62,6 +64,8 @@ CREATE INDEX idx_correlation_instances_correlated_id ON correlation_instances (c
 
 2) deploy the callbackstatetimeouts workflow
 
+kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql/03-sonataflow_callbackstatetimeouts-props.sw.yaml -n usecase3-platform-persistence-oc
+
 kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql/04-sonataflow_callbackstatetimeouts.sw.yaml -n usecase3-platform-persistence-oc
 
 
@@ -76,6 +80,8 @@ curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d 
 -------------------------------------
 Deploy the workflowtimeouts workflow
 -------------------------------------
+
+This step is no longer needed since we have configured quarkus.flyway.migrate-at-start=true
 
 1) Create the Data base tables and the schema workflowtimeouts
 
@@ -107,3 +113,16 @@ kubectl apply -f platforms/openshift-dataindex_and_jobservice_as_platform_servic
 2) Create an instance and verify
 
 curl -X POST -H 'Content-Type:application/json' -H 'Accept:application/json' -d '{}'  http://helloworld/helloworld
+
+
+--------------
+DataIndex queries
+--------------
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessInstances { id, processId, state, endpoint, serviceUrl, start, end } }"  }' http://sonataflow-platform-data-index-service/graphql
+
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ ProcessDefinitions { id, serviceUrl, source } }"  }' http://sonataflow-platform-data-index-service/graphql
+
+curl -H "Content-Type: application/json" -H "Accept: application/json" -X POST --data '{"query" : "{ Jobs { id, processId, processInstanceId, status, expirationTime, retries, endpoint, callbackEndpoint } }"  }' http://sonataflow-platform-data-index-service/graphql
+
+
+

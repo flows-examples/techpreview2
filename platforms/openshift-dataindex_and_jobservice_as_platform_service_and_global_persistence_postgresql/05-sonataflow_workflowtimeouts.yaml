@@ -16,9 +16,16 @@ spec:
       serviceRef:
         name: postgres
         # use the same DB for simplicity
-        databaseName: sonataflow_pfdb
-        # setting schema name here intentionally, if not set, the WF name will be used instead.
+        databaseName: sonataflow
+        # setting schema name here intentionally to test, if not set, the WF name will be used instead.
         databaseSchema: wf_timeouts
+  podTemplate:
+    container:
+      env:
+        # By now, to align with kogito-runtimes default configurations the schema initialization is disabled by default.
+        # As example, we can configure that value as an env var in the WF container.
+        - name: QUARKUS_FLYWAY_MIGRATE_AT_START
+          value: 'true'
   flow:
     start: PrintStartMessage
     timeouts:
