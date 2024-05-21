@@ -1,0 +1,6 @@
+resources:
+# DB server and Broker
+- 01-postgres.yaml
+- 02-default-broker.yaml
+# Optional to track events for debugging
+- 02-optional-event-display.yaml
