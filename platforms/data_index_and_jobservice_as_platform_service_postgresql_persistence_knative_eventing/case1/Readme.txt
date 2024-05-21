@@ -1,4 +1,6 @@
-Case1#
+Case1)
+
+    DI, JS, and the workflow takes the eventing configuration from the platform.
 
 kubectl create namespace case1-kn-eventing
 kubectl delete namespace case1-kn-eventing
