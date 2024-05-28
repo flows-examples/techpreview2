@@ -1,0 +1,32 @@
+resources:
+# DB server and Broker
+- 01-postgres.yaml
+#- 02-default-broker.yaml
+- 02-default-broker-kafka.yaml
+# Optional to track events for debugging
+- 02-optional-event-display.yml
+# Sink binding and triggers for data-index and jobs service respectively
+- knative-eventing-assets/01-data-index-service-triggers.yml
+- knative-eventing-assets/02-jobs-service-sb-and-triggers.yml
+# SonataFlowPlatform
+- 03-sonataflow_platform.yaml
+# The particular workflow sink binding and triggers
+- 04-callbackstatetimeouts-knative-eventing-assets.yaml
+# Workflow properties if any as usual
+- 05-configmap_callbackstatetimeouts-props.yaml
+# The workflow
+- 06-sonataflow_callbackstatetimeouts.sw.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+  - name: postgres-secrets
+    literals:
+      - POSTGRES_USER=sonataflow
+      - POSTGRES_PASSWORD=sonataflow
+      - POSTGRES_DB=sonataflow
+      - PGDATA=/var/lib/postgresql/data/mydata
+
+sortOptions:
+  order: fifo
