@@ -1,0 +1,31 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sonataflow-platform-jobs-service-create-job-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: job.create
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-jobs-service
+    uri: /v2/jobs/events
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: jobs-service-postgresql-cancel-job-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: job.delete
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: sonataflow-platform-jobs-service
+    uri: /v2/jobs/events

@@ -1,0 +1,32 @@
+#apiVersion: sources.knative.dev/v1
+#kind: SinkBinding
+#metadata:
+#  labels:
+#    app: callbackstatetimeouts
+#    sonataflow.org/workflow-app: callbackstatetimeouts
+#  name: callbackstatetimeouts-sb
+#spec:
+#  sink:
+#    ref:
+#      apiVersion: eventing.knative.dev/v1
+#      kind: Broker
+#      name: default
+#  subject:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: callbackstatetimeouts
+#---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: callbackstatetimeouts-callback-event-type-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: callback_event_type
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: callbackstatetimeouts
