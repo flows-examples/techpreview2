@@ -3,16 +3,14 @@ kind: SonataFlowPlatform
 metadata:
   name: sonataflow-platform
 spec:
-  eventing:
-    # Platform Broker configuration. Should be used by DI, JS and the workflows if not overridden.
-    broker:
-      ref:
-        name: sonataflow-broker
-        apiVersion: eventing.knative.dev/v1
-        kind: Broker
   services:
     dataIndex:
       enabled: true
+      source:
+        ref:
+          name: sonataflow-broker
+          apiVersion: eventing.knative.dev/v1
+          kind: Broker
       persistence:
         postgresql:
           serviceRef:
@@ -31,6 +29,16 @@ spec:
             command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
     jobService:
       enabled: true
+      source:
+        ref:
+          name: sonataflow-broker
+          apiVersion: eventing.knative.dev/v1
+          kind: Broker
+      sink:
+        ref:
+          name: sonataflow-broker
+          apiVersion: eventing.knative.dev/v1
+          kind: Broker
       persistence:
         postgresql:
           serviceRef:

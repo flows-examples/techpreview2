@@ -1,26 +1,28 @@
-Case1)
+Case3)
 
-    DI, JS, and the workflow takes the eventing configuration from the platform.
+    DI, with source configuration
+    JS, with sink and source configuration
+    The workflow with source and sink configuration
 
-kubectl create namespace case1-kn-eventing
-kubectl delete namespace case1-kn-eventing
+kubectl create namespace case3-kn-eventing
+kubectl delete namespace case3-kn-eventing
 
 #-2 execute this command to produce the full setup, i.e:
-    * Operator deployed DI with 7 triggers
+    * Operator deployed DI with 6 triggers
     * Operator deployed JS with 2 triggers + 1 sinkbinding
-    * Operator managed workflow (including persistence) + 1 trigger + 1 sinkbinding
+    * Operator managed workflow (including persistence) + 1 triggers , 1 sinkbindings
 
-kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case1 | kubectl apply -f - -n case1-kn-eventing
+kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case3 | kubectl apply -f - -n case3-kn-eventing
 
 
-kn trigger list -n case1-kn-eventing
+kn trigger list -n case3-kn-eventing
 
-kn source list -n case1-kn-eventing
+kn source list -n case3-kn-eventing
 
 
 #-3 get the running pods.
 
-kubectl get pod -n usecase3-knative-eventing
+kubectl get pod -n case3-kn-eventing
 
 
 

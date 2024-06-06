@@ -42,7 +42,7 @@ kind: Trigger
 metadata:
   name: trigger-eventdisplay
 spec:
-  broker: default
+  broker: sonataflow-broker
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1

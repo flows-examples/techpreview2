@@ -10,7 +10,6 @@ spec:
   # In this example we only configure the DB to use, the operator will manage all the rest at build time.
   # 1) add the necessary quarkus extensions related to the persistence
   # 2) add the necessary build time properties related to the persistence in the form of maven build attributes
-  # Broker configuration must be taken form the SPF
   persistence:
     postgresql:
       secretRef:
@@ -20,6 +19,22 @@ spec:
       serviceRef:
         name: postgres
         databaseName: sonataflow
+  sink:
+    ref:
+      name: sonataflow-broker
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+  sources:
+    - eventType: callback_event_type
+      ref:
+        name: sonataflow-broker
+        apiVersion: eventing.knative.dev/v1
+        kind: Broker
+    - eventType: callback_event_type2
+      ref:
+        name: sonataflow-broker2
+        apiVersion: eventing.knative.dev/v1
+        kind: Broker
   podTemplate:
     initContainers:
       - name: init-postgres
@@ -32,6 +47,9 @@ spec:
       - name: callbackEvent
         source: ''
         type: callback_event_type
+      - name: callbackEvent2
+        source: ''
+        type: callback_event_type2
       - name: exitEvent
         source: ''
         kind: produced
@@ -58,6 +76,18 @@ spec:
             refName: systemOut
             arguments:
               message: "${\"callback-state-timeouts: \" + $WORKFLOW.instanceId + \" has executed the callbackFunction.\"}"
+        eventRef: callbackEvent
+        transition: CallbackState2
+        timeouts:
+          eventTimeout: PT30S
+      - name: CallbackState2
+        type: callback
+        action:
+          name: callbackAction2
+          functionRef:
+            refName: systemOut
+            arguments:
+              message: "${\"callback-state-timeouts: \" + $WORKFLOW.instanceId + \" has executed the callbackFunction2.\"}"
         eventRef: callbackEvent
         transition: CheckEventArrival
         timeouts:
