@@ -10,7 +10,6 @@ spec:
   # In this example we only configure the DB to use, the operator will manage all the rest at build time.
   # 1) add the necessary quarkus extensions related to the persistence
   # 2) add the necessary build time properties related to the persistence in the form of maven build attributes
-  # Broker configuration must be taken form the SPF
   persistence:
     postgresql:
       secretRef:

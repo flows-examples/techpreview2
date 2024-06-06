@@ -1,26 +1,39 @@
-Case1)
+Case5)
 
     DI, JS, and the workflow takes the eventing configuration from the platform.
 
-kubectl create namespace case1-kn-eventing
-kubectl delete namespace case1-kn-eventing
+kubectl create namespace case5-kn-eventing
+kubectl delete namespace case5-kn-eventing
+
+kubectl create namespace case5-kn-eventing-workflows
+kubectl delete namespace case5-kn-eventing-workflows
 
 #-2 execute this command to produce the full setup, i.e:
     * Operator deployed DI with 7 triggers
     * Operator deployed JS with 2 triggers + 1 sinkbinding
     * Operator managed workflow (including persistence) + 1 trigger + 1 sinkbinding
 
-kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case1 | kubectl apply -f - -n case1-kn-eventing
+Deploy DI and JS
+kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case5 | kubectl apply -f - -n case5-kn-eventing
 
 
-kn trigger list -n case1-kn-eventing
+Deploy the WF in a different namespace
 
-kn source list -n case1-kn-eventing
+kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case5/workflows | kubectl apply -f - -n case5-kn-eventing-workflows
+
+kubectl apply -f platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case5/05-configmap_callbackstatetimeouts-props.yaml -n case5-kn-eventing-workflows
+
+kubectl apply -f platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case5/06-sonataflow_callbackstatetimeouts.sw.yaml -n case5-kn-eventing-workflows
+
+
+kn trigger list -n case5-kn-eventing
+
+kn source list -n case5-kn-eventing
 
 
 #-3 get the running pods.
 
-kubectl get pod -n usecase3-knative-eventing
+kubectl get pod -n case5-knative-eventing
 
 
 
