@@ -1,0 +1,89 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlow
+metadata:
+  name: callbackstatetimeouts2
+  annotations:
+    sonataflow.org/description: Callback State Timeouts Example k8s
+    sonataflow.org/version: 0.0.1
+    sonataflow.org/profile: preview
+spec:
+  # In this example we only configure the DB to use, the operator will manage all the rest at build time.
+  # 1) add the necessary quarkus extensions related to the persistence
+  # 2) add the necessary build time properties related to the persistence in the form of maven build attributes
+  # Broker configuration must be taken form the SPF or the "SFCP -> SFP"
+  persistence:
+    postgresql:
+      secretRef:
+        name: postgres-secrets
+        userKey: POSTGRES_USER
+        passwordKey: POSTGRES_PASSWORD
+      serviceRef:
+        name: postgres
+        # reuse the database used by DI and JS for simplicity.
+        namespace: case5-kn-eventing
+        databaseName: sonataflow
+  flow:
+    start: PrintStartMessage
+    events:
+      - name: callbackEvent
+        source: ''
+        type: callback_event_type_2
+      - name: exitEvent
+        source: ''
+        kind: produced
+        type: callbackstatetimeouts_exit_event_2
+    functions:
+      - name: systemOut
+        type: custom
+        operation: sysout
+    states:
+      - name: PrintStartMessage
+        type: operation
+        actions:
+          - name: printSystemOut
+            functionRef:
+              refName: systemOut
+              arguments:
+                message: "${\"callback-state-timeouts2: \" + $WORKFLOW.instanceId + \" has started.\"}"
+        transition: CallbackState
+      - name: CallbackState
+        type: callback
+        action:
+          name: callbackAction
+          functionRef:
+            refName: systemOut
+            arguments:
+              message: "${\"callback-state-timeouts2: \" + $WORKFLOW.instanceId + \" has executed the callbackFunction.\"}"
+        eventRef: callbackEvent
+        transition: CheckEventArrival
+        timeouts:
+          eventTimeout: PT30S
+      - name: CheckEventArrival
+        type: switch
+        dataConditions:
+          - condition: "${ .eventData != null }"
+            transition: EventArrived
+        defaultCondition:
+          transition: EventNotArrived
+      - name: EventArrived
+        type: inject
+        data:
+          exitMessage: "The callback event2 has arrived."
+        transition: PrintExitMessage
+      - name: EventNotArrived
+        type: inject
+        data:
+          exitMessage: "The callback event2 has not arrived, and the timeout has overdue."
+        transition: PrintExitMessage
+      - name: PrintExitMessage
+        type: operation
+        actions:
+          - name: printSystemOut
+            functionRef:
+              refName: systemOut
+              arguments:
+                message: "${\"callback-state-timeouts2: \" + $WORKFLOW.instanceId + \" has finalized. \" + .exitMessage + \" eventData: \" + .eventData}"
+        end:
+          terminate: true
+          produceEvents:
+            - eventRef: exitEvent

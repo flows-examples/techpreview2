@@ -2,7 +2,7 @@ Case2)
 
     DI, with source configuration
     JS, with sink and source configuration
-    The workflow with no eventing related configuration, so it takes standard configuration non based on knative-eventing.
+    The workflow with no eventing related configuration, so it takes standard configuration with NO knative-eventing stuff.
 
 kubectl create namespace case2-kn-eventing
 kubectl delete namespace case2-kn-eventing
