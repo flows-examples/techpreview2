@@ -3,6 +3,7 @@ resources:
 - 03-sonataflow_platform.yaml
 - 05-configmap_callbackstatetimeouts-props.yaml
 - 06-sonataflow_callbackstatetimeouts.sw.yaml
+- 07-sonataflow_eventstatetimeouts.sw.yaml
 
 generatorOptions:
   disableNameSuffixHash: true

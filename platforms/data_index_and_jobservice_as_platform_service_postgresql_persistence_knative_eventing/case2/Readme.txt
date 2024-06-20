@@ -2,7 +2,8 @@ Case2)
 
     DI, with source configuration
     JS, with sink and source configuration
-    The workflow with no eventing related configuration, so it takes standard configuration with NO knative-eventing stuff.
+    The workflow with no eventing related configuration at all.
+    The deployment will fail. (it has no way to communicate wit the DI and JS)
 
 kubectl create namespace case2-kn-eventing
 kubectl delete namespace case2-kn-eventing
@@ -10,7 +11,13 @@ kubectl delete namespace case2-kn-eventing
 #-2 execute this command to produce the full setup, i.e:
     * Operator deployed DI with 7 triggers
     * Operator deployed JS with 2 triggers + 1 sinkbinding
-    * Operator managed workflow (including persistence) + no triggers no sinkbindings
+    * Workflow deployment must fail with the status:
+
+    message: Error in deploy the workflow:no sink configured in the workflow or the
+    platform when Job Service or Data Index Service is enabled
+    reason: DeploymentFailure
+    status: "False"
+
 
 kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case2 | kubectl apply -f - -n case2-kn-eventing
 
