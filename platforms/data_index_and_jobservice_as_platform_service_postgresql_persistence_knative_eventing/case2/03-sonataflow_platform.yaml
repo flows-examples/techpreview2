@@ -3,6 +3,9 @@ kind: SonataFlowPlatform
 metadata:
   name: sonataflow-platform
 spec:
+  # DI has individual broker configuration
+  # JS has individual broker configuration
+  # WF has no Broker configuration, the WF deployment will fail.
   services:
     dataIndex:
       enabled: true
