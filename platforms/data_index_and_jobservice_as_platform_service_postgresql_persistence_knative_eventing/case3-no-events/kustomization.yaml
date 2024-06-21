@@ -1,0 +1,20 @@
+resources:
+- ../common
+- 03-sonataflow_platform.yaml
+- 05-configmap_callbackstatetimeouts-props.yaml
+- 06-sonataflow_callbackstatetimeouts.sw.yaml
+- 07-sonataflow_eventstatetimeouts.sw.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+  - name: postgres-secrets
+    literals:
+      - POSTGRES_USER=sonataflow
+      - POSTGRES_PASSWORD=sonataflow
+      - POSTGRES_DB=sonataflow
+      - PGDATA=/var/lib/postgresql/data/mydata
+
+sortOptions:
+  order: fifo
