@@ -36,12 +36,15 @@ curl -X GET http://sonataflow-platform-jobs-service/q/health
 
 curl -X GET http://sonataflow-platform-data-index-service/q/health
 
-curl -X GET http://callbackstatetimeouts/q/health
+Urls for knative deployments:
 
-curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts/callbackstatetimeouts
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.case3-kn-eventing-knservices.svc.cluster.local/callbackstatetimeouts
 
-knative -> curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.svc.cluster.local/callbackstatetimeouts
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.case3-kn-eventing-knservices/callbackstatetimeouts
 
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://eventstatetimeouts.case3-kn-eventing-knservices.svc.cluster.local/eventstatetimeouts
+
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://eventstatetimeouts.case3-kn-eventing-knservices/eventstatetimeouts
 
 --------------
 DB queries
