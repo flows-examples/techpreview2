@@ -1,5 +1,17 @@
 Case3 no-events)
 
+DI, JS and the workflows has NO eventing configuration at all, this must fail?
+
+This is what we have:
+    DJ and JS starts well, both services starts with the old direct http execution configuration.
+    It means that it's still possible to deploy these services with the direct http invocation.
+
+    Workflows however are not deployed. Both gets a deployment failure
+
+    callbackstatetimeouts   preview   0.0.1           False   DeploymentFailure
+    eventstatetimeouts      preview   0.0.1           False   DeploymentFailure
+
+
 kubectl create namespace case3-no-events
 kubectl delete namespace case3-no-events
 

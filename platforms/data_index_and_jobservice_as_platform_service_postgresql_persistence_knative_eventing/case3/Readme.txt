@@ -41,6 +41,8 @@ curl -X GET http://callbackstatetimeouts/q/health
 
 curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts/callbackstatetimeouts
 
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://eventstatetimeouts/eventstatetimeouts
+
 knative -> curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.svc.cluster.local/callbackstatetimeouts
 
 

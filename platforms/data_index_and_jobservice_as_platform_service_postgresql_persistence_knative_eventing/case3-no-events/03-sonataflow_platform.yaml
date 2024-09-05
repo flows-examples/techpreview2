@@ -7,6 +7,7 @@ spec:
     dataIndex:
       enabled: true
       persistence:
+        migrateDBOnStartUp: true
         postgresql:
           serviceRef:
             name: postgres
@@ -25,6 +26,7 @@ spec:
     jobService:
       enabled: true
       persistence:
+        migrateDBOnStartUp: true
         postgresql:
           serviceRef:
             name: postgres

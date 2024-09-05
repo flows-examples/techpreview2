@@ -12,6 +12,7 @@ spec:
   # 2) add the necessary build time properties related to the persistence in the form of maven build attributes
   # Broker configuration must be taken form the SPF
   persistence:
+    migrateDBOnStartUp: true
     postgresql:
       secretRef:
         name: postgres-secrets

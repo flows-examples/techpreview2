@@ -1,8 +1,8 @@
-Case3)
+Case3 knative services)
 
     DI, with source configuration
     JS, with sink and source configuration
-    The workflow with source and sink configuration
+    The workflows with source and sink configuration
 
 kubectl create namespace case3-kn-eventing-knservices
 kubectl delete namespace case3-kn-eventing-knservices
@@ -11,6 +11,8 @@ kubectl delete namespace case3-kn-eventing-knservices
     * Operator deployed DI with 6 triggers
     * Operator deployed JS with 2 triggers + 1 sinkbinding
     * Operator managed workflow (including persistence) + 1 triggers , 1 sinkbindings
+
+kubectl create namespace case3-kn-eventing-knservices
 
 kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case3-knative-services | kubectl apply -f - -n case3-kn-eventing-knservices
 
@@ -38,9 +40,18 @@ curl -X GET http://sonataflow-platform-data-index-service/q/health
 
 Urls for knative deployments:
 
+http://callbackstatetimeouts.case3-kn-eventing-knservices
+
 curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.case3-kn-eventing-knservices.svc.cluster.local/callbackstatetimeouts
 
 curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' http://callbackstatetimeouts.case3-kn-eventing-knservices/callbackstatetimeouts
+
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://eventstatetimeouts.case3-kn-eventing-knservices.svc.cluster.local/eventstatetimeouts
+
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://eventstatetimeouts.case3-kn-eventing-knservices/eventstatetimeouts
+
+
+curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://helloworld.sonataflow-infra/helloworld
 
 curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'  http://eventstatetimeouts.case3-kn-eventing-knservices.svc.cluster.local/eventstatetimeouts
 

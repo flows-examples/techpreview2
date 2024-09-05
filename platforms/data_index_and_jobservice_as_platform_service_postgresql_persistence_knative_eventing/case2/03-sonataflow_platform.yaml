@@ -15,6 +15,7 @@ spec:
           apiVersion: eventing.knative.dev/v1
           kind: Broker
       persistence:
+        migrateDBOnStartUp: true
         postgresql:
           serviceRef:
             name: postgres
@@ -43,6 +44,7 @@ spec:
           apiVersion: eventing.knative.dev/v1
           kind: Broker
       persistence:
+        migrateDBOnStartUp: true
         postgresql:
           serviceRef:
             name: postgres
