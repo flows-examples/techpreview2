@@ -60,10 +60,9 @@ select id, process_id from process_instances;
 
 select id, process_id from "callbackstatetimeouts".process_instances;
 
+select id, fire_time from "jobs-service-schema".job_details;
 
-select id, fire_time from "jobs-service".job_details;
-
-select * from "jobs-service".job_details;
+select id, process_id, callback_endpoint fire_time from "data-index-schema".jobs;
 
 
 --------------

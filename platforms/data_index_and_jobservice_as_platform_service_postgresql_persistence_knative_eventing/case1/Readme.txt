@@ -1,6 +1,11 @@
 Case1)
+    Broker is configured at the platform level: spec.eventing.broker
 
-    DI, JS, and the workflow takes the eventing configuration from the platform.
+    DI, JS, has no specific eventing configuration, and thus, just take
+    the eventing configuration from the platform.
+
+    Workflow has no sink or sources configuration, and thus, just take
+    the eventing configuration from the platform.
 
 kubectl create namespace case1-kn-eventing
 kubectl delete namespace case1-kn-eventing
@@ -23,7 +28,11 @@ kn source list -n case1-kn-eventing
 kubectl get pod -n usecase3-knative-eventing
 
 
+kogito.jobs-service.management.leader-check.expiration-in-seconds
 
+kogito_jobs_service_management_leader_check_expiration_in_seconds
+
+KOGITO_JOBS_SERVICE_MANAGEMENT_LEADER_CHECK_EXPIRATION_IN_SECONDS
 --------------
 Useful commands for testing/verifying the use case
 --------------
@@ -31,6 +40,9 @@ Useful commands for testing/verifying the use case
 --------------
 Curl commands
 --------------
+
+curl -X GET http://localhost:8080/q/health/live
+
 curl -X GET http://sonataflow-platform-jobs-service/q/health
 
 curl -X GET http://sonataflow-platform-data-index-service/q/health
@@ -52,10 +64,9 @@ select id, process_id from process_instances;
 
 select id, process_id from "callbackstatetimeouts".process_instances;
 
+select id, fire_time from "jobs-service-schema".job_details;
 
-select id, fire_time from "jobs-service".job_details;
-
-select * from "jobs-service".job_details;
+select id, process_id, callback_endpoint fire_time from "data-index-schema".jobs;
 
 
 --------------

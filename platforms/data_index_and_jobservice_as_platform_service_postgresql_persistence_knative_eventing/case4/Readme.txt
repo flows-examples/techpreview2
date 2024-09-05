@@ -2,7 +2,7 @@ Case4)
 
     DI, with source configuration
     JS, with sink and source configuration
-    The workflow with source and sink configuration
+    The workflow with source and sink configuration but two different brokers used.
 
 kubectl create namespace case4-kn-eventing
 kubectl delete namespace case4-kn-eventing

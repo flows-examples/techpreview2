@@ -11,6 +11,7 @@ spec:
   # 1) add the necessary quarkus extensions related to the persistence
   # 2) add the necessary build time properties related to the persistence in the form of maven build attributes
   persistence:
+    migrateDBOnStartUp: true
     postgresql:
       secretRef:
         name: postgres-secrets
