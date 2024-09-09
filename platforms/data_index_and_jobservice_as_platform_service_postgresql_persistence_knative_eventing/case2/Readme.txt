@@ -3,7 +3,7 @@ Case2)
     DI, with source configuration
     JS, with sink and source configuration
     The workflow with no eventing related configuration at all.
-    The deployment will fail. (it has no way to communicate wit the DI and JS)
+    The WF deployment will fail. (it has no way to communicate wit the DI and JS)
 
 kubectl create namespace case2-kn-eventing
 kubectl delete namespace case2-kn-eventing
