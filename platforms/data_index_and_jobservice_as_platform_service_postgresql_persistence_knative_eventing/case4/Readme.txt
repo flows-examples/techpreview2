@@ -7,25 +7,6 @@ Case4)
 kubectl create namespace case4-kn-eventing
 kubectl delete namespace case4-kn-eventing
 
-#-2 execute this command to produce the full setup, i.e:
-    * Operator deployed DI with 7 triggers
-    * Operator deployed JS with 2 triggers + 1 sinkbinding
-    * Operator managed workflow (including persistence) + 2 triggers, 1 sinkbindings
-
-    callbackstatetimeouts-callbackevent-trigger                 sonataflow-broker    service:callbackstatetimeouts                    26m   6 OK / 6     True
-    callbackstatetimeouts-callbackevent2-trigger                sonataflow-broker2   service:callbackstatetimeouts                    26m   6 OK / 6     True
-    sonataflow-platform-data-index-jobs-trigger                 sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-definition-trigger   sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-error-trigger        sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-node-trigger         sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-sla-trigger          sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-state-trigger        sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-data-index-process-variable-trigger     sonataflow-broker    service:sonataflow-platform-data-index-service   29m   6 OK / 6     True
-    sonataflow-platform-jobs-service-create-job-trigger         sonataflow-broker    service:sonataflow-platform-jobs-service         29m   6 OK / 6     True
-    sonataflow-platform-jobs-service-delete-job-trigger         sonataflow-broker    service:sonataflow-platform-jobs-service         29m   6 OK / 6     True
-
-
-
 kubectl kustomize platforms/data_index_and_jobservice_as_platform_service_postgresql_persistence_knative_eventing/case4 | kubectl apply -f - -n case4-kn-eventing
 
 
