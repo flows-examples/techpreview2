@@ -2,7 +2,9 @@ Case3)
 
     DI, with source configuration
     JS, with sink and source configuration
-    The workflow with source and sink configuration
+    The callbackstatetimeouts workflow with sources and sink configuration + persistence
+    The eventstatetimeouts workflow with sources and sink configuration no persistence
+
 
 kubectl create namespace case3-kn-eventing
 kubectl delete namespace case3-kn-eventing
