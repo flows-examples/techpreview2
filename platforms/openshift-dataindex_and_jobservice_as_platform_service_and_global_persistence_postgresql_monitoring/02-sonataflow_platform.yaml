@@ -1,0 +1,35 @@
+apiVersion: sonataflow.org/v1alpha08
+kind: SonataFlowPlatform
+metadata:
+  name: sonataflow-platform
+spec:
+  monitoring:
+    enabled: true
+  services:
+    # no persistence is defined for the DI, it will take it from the SFP
+    dataIndex:
+      enabled: true
+      podTemplate:
+        initContainers:
+          - name: init-postgres
+            image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+    jobService:
+      # no persistence is defined for the JS, it will take it from the SFP if any.
+      enabled: true
+      podTemplate:
+        initContainers:
+          - name: init-postgres
+            image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
+  persistence:
+    postgresql:
+      secretRef:
+        name: postgres-secrets
+        userKey: POSTGRESQL_USER
+        passwordKey: POSTGRESQL_PASSWORD
+      serviceRef:
+        name: postgres
+        databaseName: sonataflow
