@@ -2,6 +2,9 @@
 
 kubectl create namespace usecase3-platform-persistence-oc
 
+kubectl delete  namespace usecase3-platform-persistence-oc
+
+
 2) create the SonataFlowPlatform
 
 kubectl kustomize platforms/openshift-dataindex_and_jobservice_as_platform_service_and_global_persistence_postgresql | kubectl apply -f - -n usecase3-platform-persistence-oc

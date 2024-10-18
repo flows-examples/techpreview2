@@ -23,8 +23,8 @@ spec:
     container:
       env:
         - name: K_SINK
-          value:  http://kafka-broker-ingress.knative-eventing.svc.cluster.local/usecase3-knative-eventing/default
-        #          value: http://broker-ingress.knative-eventing.svc.cluster.local/usecase3-knative-eventing/default
+#          value:  http://kafka-broker-ingress.knative-eventing.svc.cluster.local/usecase3-knative-eventing/default
+          value: http://broker-ingress.knative-eventing.svc.cluster.local/usecase3-knative-eventing/default
         - name: MP_MESSAGING_OUTGOING_KOGITO_JOB_SERVICE_JOB_REQUEST_EVENTS_URL
           value: ${K_SINK}
         - name: MP_MESSAGING_OUTGOING_KOGITO_PROCESSINSTANCES_EVENTS_URL

@@ -7,7 +7,7 @@ spec:
     config:
       strategyOptions:
 #        KanikoBuildCacheEnabled: "true" is not working
-        KanikoBuildCacheEnabled: "false"
+        KanikoBuildCacheEnabled: "true"
   services:
     dataIndex:
       enabled: true

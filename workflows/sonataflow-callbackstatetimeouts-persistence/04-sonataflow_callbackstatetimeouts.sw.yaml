@@ -27,7 +27,7 @@ spec:
         # by now, when the WF persistence is initialized we don't set migration to true.
         # we can re-evaluate to default to true.
         - name: QUARKUS_FLYWAY_MIGRATE_AT_START
-          value: 'false'
+          value: 'true'
   flow:
     start: PrintStartMessage
     events:
