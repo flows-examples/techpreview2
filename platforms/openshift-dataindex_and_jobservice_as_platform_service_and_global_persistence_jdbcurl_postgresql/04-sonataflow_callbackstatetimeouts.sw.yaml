@@ -6,7 +6,18 @@ metadata:
     sonataflow.org/description: Callback State Timeouts Example k8s
     sonataflow.org/version: 0.0.1
 spec:
-  persistence: {}
+  persistence:
+    postgresql:
+      secretRef:
+        name: postgres-secrets
+        userKey: POSTGRESQL_USER
+        passwordKey: POSTGRESQL_PASSWORD
+      serviceRef:
+        name: postgres
+        # use the same DB for simplicity
+        databaseName: sonataflow
+        # setting schema name here intentionally to test, if not set, the WF name will be used instead.
+        databaseSchema: wf_callbackstatetimeouts
   flow:
     start: PrintStartMessage
     events:
