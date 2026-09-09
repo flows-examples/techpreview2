@@ -29,7 +29,7 @@ spec:
         app.kubernetes.io/name: sonataflow-psql-postgresql
     spec:
       imagePullSecrets:
-        - name: 6340056-sonataflow-testing-pull-secret
+        - name: testing-pull-secret
       containers:
         - name: postgres
           image: registry.redhat.io/rhel9/postgresql-13:1-173
