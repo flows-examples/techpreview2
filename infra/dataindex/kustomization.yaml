@@ -5,10 +5,10 @@ resources:
 secretGenerator:
   - name: postgres-secrets
     literals:
-      - POSTGRES_USER=sonataflow
-      - POSTGRES_PASSWORD=sonataflow
-      - POSTGRES_DB=sonataflow
-      - PGDATA=/var/lib/postgresql/data/mydata
+      - POSTGRESQL_USER=sonataflow
+      - POSTGRESQL_PASSWORD=sonataflow
+      - POSTGRESQL_DATABASE=sonataflow
+      - PGDATA=/var/lib/pgsql/data/userdata
 
 configMapGenerator:
   - name: dataindex-properties
